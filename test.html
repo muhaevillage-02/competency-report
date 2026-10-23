@@ -941,21 +941,20 @@ var LLP = (() => {
 
   /* ─── 첫 화면 (로그인 웹) ─────────────────────────────── */
   function renderEntry() {
-    const st = { name: '', phone: '', pw: '', busy: false, err: '' };
+    // 응시자와 관리자가 같은 칸을 쓴다: 이름에 '관리자'를 넣으면 연락처 칸에 넣은 값이 관리자 비밀번호가 된다
+    const st = { name: '', phone: '', busy: false, err: '' };
+    const isAdmin = () => st.name.trim() === SITE.adminName;
+    const ready = () => (isAdmin() ? st.phone.trim().length > 0 : st.name.trim() && st.phone.replace(/\D/g, '').length >= 8);
     const draw = () => {
-      const admin = st.name.trim() === SITE.adminName;
-      const ready = admin ? st.pw.length > 0 : st.name.trim() && st.phone.replace(/\D/g, '').length >= 8;
       app.innerHTML = `<main class="dark center"><div class="wrap">
         <p class="org">${esc(SITE.org)}</p>
         <h1 class="h-xl">20대<br>핵심역량 진단</h1>
-        <p class="lead">${admin ? '관리자 비밀번호를 입력하면 관리 화면으로 이동해요.' : '안내받은 이름과 연락처를 입력하면 검사를 시작할 수 있어요.'}</p>
+        <p class="lead">안내받은 이름과 연락처를 입력하면 검사를 시작할 수 있어요.</p>
         <form class="white-card" id="f" novalidate>
           <div class="field"><label class="lbl" for="e-name">이름</label><input class="inp" id="e-name" maxlength="40" autocomplete="name" placeholder="홍길동" value="${esc(st.name)}"></div>
-          ${admin
-            ? `<div class="field"><label class="lbl" for="e-pw">관리자 비밀번호</label><input class="inp" id="e-pw" type="password" autocomplete="current-password" value="${esc(st.pw)}"></div>`
-            : `<div class="field"><label class="lbl" for="e-phone">연락처</label><input class="inp" id="e-phone" maxlength="30" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" value="${esc(st.phone)}"></div>`}
+          <div class="field"><label class="lbl" for="e-phone">연락처</label><input class="inp" id="e-phone" maxlength="30" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" value="${esc(st.phone)}"></div>
           ${st.err ? `<p class="err" role="alert">${esc(st.err)}</p>` : ''}
-          <button class="btn ink" type="submit" style="margin-top:20px" ${!ready || st.busy ? 'disabled' : ''}>${st.busy ? '확인 중…' : admin ? '관리자 화면으로' : '검사 시작하기'}</button>
+          <button class="btn ink" type="submit" style="margin-top:20px" ${!ready() || st.busy ? 'disabled' : ''}>${st.busy ? '확인 중…' : '검사 시작하기'}</button>
         </form>
         <p class="fine">담당 연구원에게 받은 링크로 바로 들어와도 돼요.</p>
         ${configured ? '' : '<p class="err">설정 필요: index.html 맨 위의 API_URL 에 구글 Apps Script 웹 앱 주소를 넣어 주세요.</p>'}
@@ -964,21 +963,19 @@ var LLP = (() => {
     draw();
     app.oninput = (e) => {
       const t = e.target;
-      const wasAdmin = st.name.trim() === SITE.adminName;
       if (t.id === 'e-name') st.name = t.value;
       if (t.id === 'e-phone') st.phone = t.value;
-      if (t.id === 'e-pw') st.pw = t.value;
       st.err = '';
-      const isAdmin = st.name.trim() === SITE.adminName;
-      if (wasAdmin !== isAdmin) { draw(); const el = document.getElementById(isAdmin ? 'e-pw' : 'e-name'); el.focus(); if (!isAdmin) el.setSelectionRange(el.value.length, el.value.length); }
-      else { const b = app.querySelector('button[type=submit]'); const ready = isAdmin ? st.pw.length > 0 : st.name.trim() && st.phone.replace(/\D/g, '').length >= 8; b.disabled = !ready; const er = app.querySelector('.err[role=alert]'); if (er) er.remove(); }
+      app.querySelector('button[type=submit]').disabled = !ready();
+      const er = app.querySelector('.err[role=alert]'); if (er) er.remove();
     };
     app.onsubmit = async (e) => {
       e.preventDefault();
+      if (!ready()) return;
       st.busy = true; st.err = ''; draw();
       try {
-        if (st.name.trim() === SITE.adminName) {
-          const j = await api('login', { password: st.pw });
+        if (isAdmin()) {
+          const j = await api('login', { password: st.phone.trim() });
           try { sessionStorage.setItem('ll_token', j.token); } catch (_) { /* 저장소를 못 쓰면 관리자 화면에서 다시 로그인 */ }
           location.href = TEST_MODE ? 'test-admin.html' : 'admin.html';
           return;
