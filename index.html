@@ -87,6 +87,7 @@ fieldset+fieldset{margin-top:32px}
 legend{padding:0;font-size:16px;font-weight:600;line-height:1.45;color:var(--ink)}
 legend .no{color:#CBD5E1;margin-right:8px}
 .lk{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
+.tfill{display:block;margin:0 0 24px auto;border:1px dashed #CBD5E1;border-radius:999px;background:#F8FAFC;padding:6px 14px;font-size:12px;font-weight:700;color:#64748B;cursor:pointer}
 .lk button{border:1px solid #E2E8F0;background:#fff;border-radius:12px;padding:12px 0;font-size:11px;font-weight:700;line-height:1.25;color:#64748B;cursor:pointer;min-height:48px}
 .lk button span{display:block}
 .lk button[aria-pressed="true"]{background:var(--ink);border-color:transparent;color:#fff}
@@ -1082,7 +1083,9 @@ var LLP = (() => {
             ? `<div class="ptc-stack">${S.pages.map((p, i) => `<p class="ptc-label">${i + 1}장 · ${['한눈에 보기', '세부역량과 해석', '상담 안내'][i]}${i === 1 ? '<span>상담에서 공개</span>' : ''}</p><div class="ptc-fit"><div>${p}</div></div>`).join('')}</div>`
             : `<div class="card"><p style="margin:0;font-size:14px;color:#64748B">${S.resultErr ? esc(S.resultErr) : '결과지를 불러오는 중…'}</p></div>`}
           <p class="fine">이 진단은 ${esc(SITE.org)}와 상담 단체 ${esc(SITE.partner)}가 함께 만들었어요.<br>${esc(SITE.basis)} 역량 분류 기반 · ${Q.INNER_TOTAL}문항</p>
-          ${inv.test ? '<button class="btn ghost" data-act="retest">테스트 계정 · 처음부터 다시 해보기</button>' : ''}
+          ${inv.test ? `<a class="btn light" href="admin.html#/r/${encodeURIComponent(id)}" style="text-align:center;text-decoration:none">테스트 계정 · 전체 결과지 보기</a>
+            <p class="fine" style="margin-top:8px">고객용 결과지 3장 전부와 상담사용 자료가 열려요 · 관리자 비밀번호 필요</p>
+            <button class="btn ghost" data-act="retest">테스트 계정 · 처음부터 다시 해보기</button>` : ''}
         </div></main>`;
         fitPages();
         return;
@@ -1096,7 +1099,7 @@ var LLP = (() => {
       app.innerHTML = `<main>
         <div class="top"><div class="row"><span><span class="part">${S.page >= PART2_PAGE ? '2부 · 평소의 나' : '1부 · 일과 공부에서의 나'}</span>${S.page + 1} / ${PAGE_COUNT}</span><span>${answered} / ${Q.INNER_TOTAL}</span></div>
         <div class="bar"><i style="width:${Math.round(answered / Q.INNER_TOTAL * 100)}%"></i></div></div>
-        <div class="qs">${idx.map((i, k) => `<fieldset><legend><span class="no">${start + k + 1}</span>${esc(Q.questionText(i))}</legend>
+        <div class="qs">${inv.test ? '<button type="button" class="tfill" data-act="autofill">테스트 계정 · 이 페이지 자동 응답</button>' : ''}${idx.map((i, k) => `<fieldset><legend><span class="no">${start + k + 1}</span>${esc(Q.questionText(i))}</legend>
           <div class="lk">${LIKERT.map(([v, l]) => `<button type="button" data-q="${i}" data-v="${v}" aria-pressed="${S.answers[i] === v}">${l.split('\n').map((x) => `<span>${x}</span>`).join('')}</button>`).join('')}</div></fieldset>`).join('')}
           ${S.err ? `<p class="err">${esc(S.err)}</p>` : ''}</div>
         <div class="nav"><div class="row">${S.page > 0 ? '<button class="prev" data-act="prev">이전</button>' : ''}<button class="next" data-act="next" ${!complete || S.busy ? 'disabled' : ''}>${S.busy ? '제출 중…' : last ? '제출하기' : '다음'}</button></div></div>
@@ -1154,6 +1157,12 @@ var LLP = (() => {
       const act = t.dataset.act;
       if (act === 'more') { e.preventDefault(); S.open = !S.open; draw(); }
       else if (act === 'restart') { clear(); S.answers = Array(Q.INNER_TOTAL).fill(null); S.page = 0; S.resumable = 0; go('form'); }
+      else if (act === 'autofill') {
+        // 테스트 계정만: 지금 페이지의 빈 문항을 무작위로 채운다
+        const start = S.page * PER_PAGE;
+        Q.INNER_DISPLAY_ORDER.slice(start, Math.min(start + PER_PAGE, Q.INNER_TOTAL)).forEach((i) => { if (S.answers[i] === null) S.answers[i] = 1 + Math.floor(Math.random() * 5); });
+        save(); draw();
+      }
       else if (act === 'retest') {
         t.disabled = true; t.textContent = '처음으로 돌리는 중…';
         api('resetTest', { id }).then(() => { clear(); location.reload(); }, (err) => { t.disabled = false; t.textContent = err.message; });
