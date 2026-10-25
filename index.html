@@ -880,14 +880,26 @@ var LLP = (() => {
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const configured = !/여기에/.test(API_URL);
 
-  async function api(action, data) {
-    if (!configured) throw new Error('index.html 맨 위의 API_URL 을 아직 넣지 않았어요.');
-    let res;
-    try { res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action }, data || {})) }); }
-    catch (_) { throw new Error('인터넷 연결을 확인하고 다시 시도해 주세요.'); }
-    const j = await res.json().catch(() => ({}));
+  // 구글 서버는 가끔 응답 없이 멈출 때가 있어 25초가 지나면 끊는다. 제출이 아닌 요청은 한 번 더 보낸다.
+  async function call(action, data) {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 25000);
+    let j;
+    try {
+      const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action }, data || {})), signal: ctl.signal });
+      j = await res.json().catch(() => ({}));
+    } catch (_) {
+      const err = new Error(ctl.signal.aborted ? '서버 응답이 늦어요. 잠시 후 다시 시도해 주세요.' : '인터넷 연결을 확인하고 다시 시도해 주세요.');
+      err.retry = true;
+      throw err;
+    } finally { clearTimeout(timer); }
     if (!j.ok) throw new Error(j.error || '요청을 처리하지 못했어요.');
     return j;
+  }
+  async function api(action, data) {
+    if (!configured) throw new Error('index.html 맨 위의 API_URL 을 아직 넣지 않았어요.');
+    try { return await call(action, data); }
+    catch (err) { if (err.retry && action !== 'submit') return call(action, data); throw err; }
   }
   function meetText(m) {
     if (!m || !m.date) return '';
@@ -898,6 +910,8 @@ var LLP = (() => {
     return `${mo}월 ${d}일 (${wd})${t}${m.place ? ' · ' + m.place : ''}`;
   }
 
+  // 구글 서버는 한동안 쉬다가 받은 첫 요청이 느리다 — 화면이 열리자마자 미리 깨워 둔다 (응답은 쓰지 않는다)
+  if (configured) fetch(API_URL, { mode: 'no-cors' }).catch(() => {});
   const id = new URLSearchParams(location.search).get('id');
   if (id) startTest(id); else renderEntry();
 
@@ -938,9 +952,12 @@ var LLP = (() => {
       st.busy = true; st.err = ''; draw();
       try {
         if (isAdmin()) {
-          const j = await api('login', { password: st.phone.trim() });
-          // 관리자 화면은 이 비밀번호로 잠금을 풀고, 서버 요청에는 토큰을 쓴다
-          try { sessionStorage.setItem('ll_token', j.token); sessionStorage.setItem('ll_pw', st.phone.trim()); } catch (_) { /* 저장소를 못 쓰면 관리자 화면에서 다시 입력 */ }
+          const j = await api('login', { password: st.phone.trim(), withList: true });
+          // 관리자 화면은 이 비밀번호로 잠금을 풀고, 서버 요청에는 토큰을 쓴다. 함께 받은 명단은 관리자 화면이 바로 보여준다.
+          try {
+            sessionStorage.setItem('ll_token', j.token); sessionStorage.setItem('ll_pw', st.phone.trim());
+            if (Array.isArray(j.rows)) sessionStorage.setItem('ll_rows', JSON.stringify({ at: Date.now(), rows: j.rows, login: true }));
+          } catch (_) { /* 저장소를 못 쓰면 관리자 화면에서 다시 입력 */ }
           location.href = 'admin.html';
           return;
         }
@@ -1095,7 +1112,11 @@ var LLP = (() => {
         go('analyzing');
         await Promise.all([loadResult(), new Promise((r) => setTimeout(r, 2400))]);
         go('done');
-      } catch (err) { S.busy = false; S.err = err.message; draw(); }
+      } catch (err) {
+        // 앞선 제출이 서버에는 들어갔는데 응답만 늦었던 경우 — 제출된 것으로 보고 결과지를 보여준다
+        if (err.message === '이미 제출된 검사입니다.') { clear(); S.busy = false; go('analyzing'); await loadResult(); go('done'); return; }
+        S.busy = false; S.err = err.message; draw();
+      }
     }
 
     app.oninput = (e) => {
