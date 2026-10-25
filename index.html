@@ -344,6 +344,7 @@ const SITE = {
   tagline: 'AI 시대에 필요한 12가지 핵심역량과, 그 역량을 움직이는 내면 동력을 함께 진단합니다',
   minutes: 15,
   adminName: '관리자',
+  testName: '테스트', testPhone: '1004',   // 체험용 테스트 계정 (서버 Code.gs 와 같아야 해요)
   retention: '결과 상담 종료 후 1년, 이후 파기 (요청 시 즉시 파기)'
 };
 </script>
@@ -920,7 +921,8 @@ var LLP = (() => {
     // 응시자와 관리자가 같은 칸을 쓴다: 이름에 '관리자'를 넣으면 연락처 칸에 넣은 값이 관리자 비밀번호가 된다
     const st = { name: '', phone: '', busy: false, err: '' };
     const isAdmin = () => st.name.trim() === SITE.adminName;
-    const ready = () => (isAdmin() ? st.phone.trim().length > 0 : st.name.trim() && st.phone.replace(/\D/g, '').length >= 8);
+    const isTest = () => st.name.trim() === SITE.testName && st.phone.replace(/\D/g, '') === SITE.testPhone;
+    const ready = () => (isAdmin() ? st.phone.trim().length > 0 : isTest() || (st.name.trim() && st.phone.replace(/\D/g, '').length >= 8));
     const draw = () => {
       app.innerHTML = `<main class="dark center"><div class="wrap">
         <p class="org">${esc(SITE.org)}</p>
@@ -1027,6 +1029,7 @@ var LLP = (() => {
             <p>${esc(SITE.org)} × ${esc(SITE.partner)} 공동 개발</p></div>
           ${S.resumable ? `<button class="btn light" data-go="form">이어서 하기 · ${S.resumable}/${Q.INNER_TOTAL} 응답함</button><button class="btn ghost" data-act="restart">처음부터 다시 하기</button>`
             : `<button class="btn light" data-go="form">시작하기</button>`}
+          ${inv.test ? '<p class="fine" style="color:var(--soft)">테스트 계정이에요. 결과를 본 뒤 언제든 처음부터 다시 해볼 수 있고, 응답은 연구 통계에 쓰이지 않아요.</p>' : ''}
           <p class="fine">응답은 안전하게 보관하며, 연구 활용에 동의한 경우에만<br>이름·연락처를 지운 뒤 통계로 분석합니다.</p>
         </div></main>`;
         return;
@@ -1079,6 +1082,7 @@ var LLP = (() => {
             ? `<div class="ptc-stack">${S.pages.map((p, i) => `<p class="ptc-label">${i + 1}장 · ${['한눈에 보기', '세부역량과 해석', '상담 안내'][i]}${i === 1 ? '<span>상담에서 공개</span>' : ''}</p><div class="ptc-fit"><div>${p}</div></div>`).join('')}</div>`
             : `<div class="card"><p style="margin:0;font-size:14px;color:#64748B">${S.resultErr ? esc(S.resultErr) : '결과지를 불러오는 중…'}</p></div>`}
           <p class="fine">이 진단은 ${esc(SITE.org)}와 상담 단체 ${esc(SITE.partner)}가 함께 만들었어요.<br>${esc(SITE.basis)} 역량 분류 기반 · ${Q.INNER_TOTAL}문항</p>
+          ${inv.test ? '<button class="btn ghost" data-act="retest">테스트 계정 · 처음부터 다시 해보기</button>' : ''}
         </div></main>`;
         fitPages();
         return;
@@ -1150,6 +1154,10 @@ var LLP = (() => {
       const act = t.dataset.act;
       if (act === 'more') { e.preventDefault(); S.open = !S.open; draw(); }
       else if (act === 'restart') { clear(); S.answers = Array(Q.INNER_TOTAL).fill(null); S.page = 0; S.resumable = 0; go('form'); }
+      else if (act === 'retest') {
+        t.disabled = true; t.textContent = '처음으로 돌리는 중…';
+        api('resetTest', { id }).then(() => { clear(); location.reload(); }, (err) => { t.disabled = false; t.textContent = err.message; });
+      }
       else if (act === 'part2') { S.page = PART2_PAGE; save(); go('questions'); }
       else if (act === 'prev') { S.page -= 1; S.err = ''; save(); draw(); window.scrollTo(0, 0); }
       else if (act === 'next') {
