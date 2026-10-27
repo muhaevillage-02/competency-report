@@ -145,6 +145,13 @@ legend .no{color:#CBD5E1;margin-right:8px}
 .cst-t{margin:0;font-size:17px;font-weight:900;color:#fff}
 .cst p{margin:6px 0 0;font-size:14px;line-height:1.65;color:rgba(255,255,255,.75)}
 .cst .btn{margin-top:16px}
+.cf-card{margin-top:28px;border-radius:18px;background:#fff;color:var(--ink);padding:28px 20px 24px}
+.cf-title{margin:0;font-size:22px;font-weight:900;color:var(--ink)}
+.cf-card .desc{margin-top:8px;font-size:14px;line-height:1.65;color:#64748B}
+.cf-card .cf-sec:first-of-type{margin-top:24px}
+.cf-done{text-align:center;padding:12px 0}
+.cf-done b{display:block;font-size:20px;font-weight:900;color:var(--ink)}
+.cf-done p{margin:8px 0 0;font-size:14px;line-height:1.65;color:#64748B}
 .cf-eye{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.16em;color:#94A3B8}
 .cf-sec{margin:36px 0 16px;padding-top:24px;border-top:1px solid #E2E8F0;font-size:17px;font-weight:900;color:var(--ink)}
 .req{font-style:normal;color:#DC2626}
@@ -1436,7 +1443,7 @@ var LLP = (() => {
           return;
         }
         const j = await api('find', { name: st.name.trim(), phone: st.phone });
-        try { sessionStorage.setItem('ll-ok-' + j.id, '1'); sessionStorage.setItem('ll-ph-' + j.id, st.phone.replace(/\D/g, '')); } catch (_) { /* 저장소를 못 쓰면 링크 화면에서 한 번 더 확인 */ }
+        try { sessionStorage.setItem('ll-ok-' + j.id, '1'); sessionStorage.setItem('ll-fresh-' + j.id, '1'); sessionStorage.setItem('ll-ph-' + j.id, st.phone.replace(/\D/g, '')); } catch (_) { /* 저장소를 못 쓰면 링크 화면에서 한 번 더 확인 */ }
         location.href = '?id=' + encodeURIComponent(j.id);
       } catch (err) {
         st.busy = false; st.err = err.message; draw();
@@ -1480,7 +1487,7 @@ var LLP = (() => {
         try {
           const j = await api('find', { name: st.name.trim(), phone: st.phone });
           if (j.id !== id) throw new Error('이 링크로 안내받은 이름과 연락처가 아니에요. 다시 확인해 주세요.');
-          try { sessionStorage.setItem('ll-ph-' + id, st.phone.replace(/\D/g, '')); } catch (_) { /* 무시 */ }
+          try { sessionStorage.setItem('ll-ph-' + id, st.phone.replace(/\D/g, '')); sessionStorage.setItem('ll-fresh-' + id, '1'); } catch (_) { /* 무시 */ }
           app.oninput = null; app.onsubmit = null;
           resolve();
         } catch (err) { st.busy = false; st.err = err.message; draw(); }
@@ -1519,10 +1526,10 @@ var LLP = (() => {
           if (n) { S.answers = d.answers; S.page = Math.min(Math.max(d.page || 0, 0), PAGE_COUNT - 1); S.status = d.status || ''; S.interest = d.interest || ''; S.resumable = n; }
         }
       } catch (_) { /* 저장소를 못 쓰는 브라우저 */ }
-      // 이름·연락처를 넣고 들어오면 소개 이야기부터 (같은 창에서 새로 고침하면 바로 초대 화면)
-      let seen = false;
-      try { seen = sessionStorage.getItem(STORY_KEY) === '1'; } catch (_) { /* 무시 */ }
-      if (!S.resumable && !seen) { S.step = 'story'; S.slide = 0; }
+      // 이름·연락처를 넣고 막 들어왔을 때마다 소개 이야기부터 (‘다시 해보기’도 마찬가지 · 같은 창에서 새로 고침하면 바로 초대 화면)
+      let fresh = false;
+      try { fresh = sessionStorage.getItem('ll-fresh-' + id) === '1'; sessionStorage.removeItem('ll-fresh-' + id); } catch (_) { /* 무시 */ }
+      if (fresh) { S.step = 'story'; S.slide = 0; }
     }
     const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ savedAt: Date.now(), answers: S.answers, page: S.page, status: S.status, interest: S.interest })); } catch (_) { /* 무시 */ } };
     const clear = () => { try { localStorage.removeItem(KEY); } catch (_) { /* 무시 */ } };
@@ -1567,6 +1574,8 @@ var LLP = (() => {
     const consulted = () => { try { return sessionStorage.getItem(CF_KEY) === '1'; } catch (_) { return false; } };
     function cfInit() {
       if (S.cf) return;
+      // 이 창에서 이미 보낸 신청서가 있으면 그 내용으로 (고쳐서 다시 보낼 때)
+      try { const sent = JSON.parse(sessionStorage.getItem(CF_KEY + '-form') || 'null'); if (sent && Array.isArray(sent.interests)) { S.cf = sent; return; } } catch (_) { /* 무시 */ }
       let ph = '';
       try { ph = sessionStorage.getItem('ll-ph-' + id) || ''; } catch (_) { /* 무시 */ }
       S.cf = { name: S.name.trim() || inv.name, phone: ph, birthday: '', university: '', location: '', interests: [], timeInvestment: '', weeklyFixed: '', concern: '',
@@ -1591,17 +1600,19 @@ var LLP = (() => {
       if (!f.notes.length) E.notes = '하나 이상 선택해 주세요.'; else if (f.notes.includes('기타') && !has(f.notesOther)) E.notes = '기타 내용을 적어 주세요.';
       return E;
     }
+    // 결과 화면 아래 신청서 카드만 다시 그린다 (결과지는 그대로)
+    const drawCf = () => { const box = document.getElementById('cf'); if (box) box.innerHTML = consultHTML(); else draw(); };
     async function cfSubmit() {
       const E = cfErrors();
       if (Object.keys(E).length) {
-        S.cerr = E; S.err = '빠진 항목이 있어요. 표시된 곳을 확인해 주세요.'; draw();
+        S.cerr = E; S.err = '빠진 항목이 있어요. 표시된 곳을 확인해 주세요.'; drawCf();
         const el = document.getElementById('cf-' + Object.keys(E)[0]); if (el) el.scrollIntoView({ block: 'center' });
         return;
       }
       const f = S.cf, other = (a, t) => a.map((x) => (x === '기타' ? '기타: ' + t.trim() : x));
       let summary = '';
       try { summary = S.res ? LLP.summaryOf(S.res.answers) : ''; } catch (_) { /* 무시 */ }
-      S.busy = true; S.err = ''; S.cerr = {}; draw();
+      S.busy = true; S.err = ''; S.cerr = {}; drawCf();
       try {
         await api('consult', { id, form: {
           name: f.name.trim(), phone: f.phone, birthday: f.birthday.trim(), university: f.university.trim(), location: f.location.trim(),
@@ -1609,19 +1620,23 @@ var LLP = (() => {
           goals: other(f.goals, f.goalsOther), plans: f.plans.trim(), evening: f.evening, premium: f.premium, gender: f.gender,
           times: f.times, notes: other(f.notes, f.notesOther), summary,
         } });
-        try { sessionStorage.setItem(CF_KEY, '1'); } catch (_) { /* 무시 */ }
-        S.busy = false; go('consulted');
-      } catch (err) { S.busy = false; S.err = err.message; draw(); }
+        try { sessionStorage.setItem(CF_KEY, '1'); sessionStorage.setItem(CF_KEY + '-form', JSON.stringify(S.cf)); } catch (_) { /* 무시 */ }
+        S.busy = false; S.cfEdit = false; drawCf();
+        const box = document.getElementById('cf'); if (box) box.scrollIntoView({ block: 'start' });
+      } catch (err) { S.busy = false; S.err = err.message; drawCf(); }
     }
     function consultHTML() {
+      cfInit();
+      if (consulted() && !S.cfEdit) {
+        return `<div class="cf-done"><div class="cf-ok">✓</div><b>신청 완료!</b><p>담당 컨설턴트가 검토 후<br>입력하신 번호로 연락드립니다. 감사합니다.</p><button type="button" class="btn ghost-ink" data-act="cf-again">내용 고쳐서 다시 보내기</button></div>`;
+      }
       const f = S.cf, E = S.cerr || {};
       const multi = (k, opts, other) => `<div class="chips">${opts.concat(other ? ['기타'] : []).map((o) => `<button type="button" class="chip" data-cf="${k}" data-v="${esc(o)}" aria-pressed="${f[k].includes(o)}">${esc(o)}</button>`).join('')}</div>${other && f[k].includes('기타') ? `<input class="inp" data-cfo="${k}" maxlength="100" placeholder="직접 적어 주세요" value="${esc(f[k + 'Other'])}">` : ''}`;
       const one = (k, opts) => `<div class="chips${opts.some((o) => o.length > 10) ? ' col' : ''}">${opts.map((o) => `<button type="button" class="chip" data-cs="${k}" data-v="${esc(o)}" aria-pressed="${f[k] === o}">${esc(o)}</button>`).join('')}</div>`;
       const inp = (k, ph = '', extra = '') => `<input class="inp" data-cfi="${k}" maxlength="${k === 'name' ? 40 : 300}" placeholder="${esc(ph)}" value="${esc(f[k])}" ${extra}>`;
       const ta = (k, ph = '') => `<textarea class="inp ta" data-cfi="${k}" maxlength="2000" placeholder="${esc(ph)}">${esc(f[k])}</textarea>`;
       const fld = (k, label, body, req = true, hint = '') => `<div class="field cf" id="cf-${k}"><p class="lbl">${label}${req ? ' <i class="req">*</i>' : ''}${hint ? `<small>${hint}</small>` : ''}</p>${body}${E[k] ? `<p class="err">${esc(E[k])}</p>` : ''}</div>`;
-      return `<main class="light-page"><div class="wrap">
-        <p class="cf-eye">1:1 CONSULTING</p><h1>컨설팅 예약 신청</h1><p class="desc">아래 정보를 작성해 주시면 담당 컨설턴트가 검토 후 연락드려요.</p>
+      return `<p class="cf-eye">1:1 CONSULTING</p><h2 class="cf-title">컨설팅 예약 신청</h2><p class="desc">결과 상담에서 한 걸음 더 — 진로 방향, 취업 전략, 멘탈 코칭까지 담당 컨설턴트와 함께 계획을 세우고 싶다면 아래 내용을 작성해 주세요. 검토 후 연락드려요.</p>
         <h2 class="cf-sec">기본 정보</h2>
         ${fld('name', '성함을 입력해 주세요', inp('name', '예) 홍길동', 'autocomplete="name"'))}
         ${fld('phone', '전화번호를 입력해 주세요', inp('phone', '예) 01012345678', 'type="tel" inputmode="tel" autocomplete="tel"'))}
@@ -1644,9 +1659,7 @@ var LLP = (() => {
         ${fld('notes', '컨설턴트 사전참고 유의사항', multi('notes', CF.notes, true))}
         ${S.err ? `<p class="err" role="alert">${esc(S.err)}</p>` : ''}
         <button class="btn ink" data-act="cf-submit" ${S.busy ? 'disabled' : ''}>${S.busy ? '보내는 중…' : '신청 완료'}</button>
-        <button class="btn ghost-ink" data-act="cf-back">결과 화면으로 돌아가기</button>
-        <p class="fine" style="color:#94A3B8">입력하신 정보는 컨설팅 일정 안내와 준비에만 쓰여요.</p>
-      </div></main>`;
+        <p class="fine" style="color:#94A3B8">입력하신 정보는 컨설팅 일정 안내와 준비에만 쓰여요.</p>`;
     }
 
     // 시작 전 소개 이야기: 화면을 누르면 다음 장 (왼쪽 끝을 누르면 이전 장)
@@ -1715,12 +1728,6 @@ var LLP = (() => {
           <div class="st-top"><div class="st-bars">${h.bars}</div><div class="st-row"><span>${S.slide + 1} / ${SLIDES.length}</span><button type="button" class="st-skip" data-act="story-skip">건너뛰기</button></div></div>
           <div class="st-stage" aria-live="polite">${h.stage}</div>
           <p class="st-tap">${h.tap}</p></div>`;
-        return;
-      }
-      if (S.step === 'consult') { app.innerHTML = consultHTML(); return; }
-      if (S.step === 'consulted') {
-        app.innerHTML = `<main class="dark center"><div class="wrap" style="text-align:center"><div class="cf-ok">✓</div><h1 class="h-md">신청 완료!</h1>
-          <p class="lead">담당 컨설턴트가 검토 후<br>입력하신 번호로 연락드립니다.<br>감사합니다.</p><button class="btn light" data-go="done">결과 화면으로</button></div></main>`;
         return;
       }
       if (S.step === 'intro') {
@@ -1796,8 +1803,7 @@ var LLP = (() => {
           ${S.pages
             ? `<div class="ptc-stack">${S.pages.map((p, i) => `<p class="ptc-label">${i + 1}장 · ${['한눈에 보는 나', '결과지 전체 구성', '상담 안내'][i]}${i === 1 ? '<span>상담에서 공개</span>' : ''}</p><div class="ap-fluid">${p}</div>`).join('')}</div>`
             : `<div class="card"><p style="margin:0;font-size:14px;color:#64748B">${S.resultErr ? esc(S.resultErr) : '결과지를 불러오는 중…'}</p></div>`}
-          <div class="cst"><p class="cst-t">1:1 컨설팅 예약 신청</p><p>결과 상담에서 한 걸음 더 — 진로 방향, 취업 전략, 멘탈 코칭까지 담당 컨설턴트와 함께 계획을 세우고 싶다면 신청해 주세요.</p>
-            <button class="btn light" data-act="consult-open">${consulted() ? '신청 완료 · 내용 고쳐서 다시 보내기' : '컨설팅 예약 신청하기'}</button></div>
+          ${S.pages ? `<section class="cf-card" id="cf">${consultHTML()}</section>` : ''}
           <p class="fine">이 진단은 ${esc(SITE.org)}와 상담 단체 ${esc(SITE.partner)}가 함께 만들었어요.<br>${esc(SITE.basis)} 역량 분류 기반 · ${Q.TOTAL}문항</p>
           ${inv.test ? `<a class="btn light" href="admin.html#/r/${encodeURIComponent(id)}" style="text-align:center;text-decoration:none">테스트 계정 · 전체 결과지 보기</a>
             <p class="fine" style="margin-top:8px">고객용 결과지 3장 전부와 상담사용 자료가 열려요 · 관리자 비밀번호 필요</p>
@@ -1866,11 +1872,10 @@ var LLP = (() => {
       const t = e.target.closest('button,[data-go]');
       if (!t) return;
       if (t.dataset.act === 'story-again') { S.slide = 0; go('story'); return; }
-      if (t.dataset.act === 'consult-open') { cfInit(); S.err = ''; S.cerr = {}; go('consult'); return; }
-      if (t.dataset.act === 'cf-back') { S.err = ''; go('done'); return; }
+      if (t.dataset.act === 'cf-again') { S.cfEdit = true; S.err = ''; S.cerr = {}; drawCf(); return; }
       if (t.dataset.act === 'cf-submit') { cfSubmit(); return; }
-      if (t.dataset.cf) { const a = S.cf[t.dataset.cf], v = t.dataset.v; S.cf[t.dataset.cf] = a.includes(v) ? a.filter((x) => x !== v) : a.concat(v); if (S.cerr) delete S.cerr[t.dataset.cf]; draw(); return; }
-      if (t.dataset.cs) { S.cf[t.dataset.cs] = t.dataset.v; if (S.cerr) delete S.cerr[t.dataset.cs]; draw(); return; }
+      if (t.dataset.cf) { const a = S.cf[t.dataset.cf], v = t.dataset.v; S.cf[t.dataset.cf] = a.includes(v) ? a.filter((x) => x !== v) : a.concat(v); if (S.cerr) delete S.cerr[t.dataset.cf]; drawCf(); return; }
+      if (t.dataset.cs) { S.cf[t.dataset.cs] = t.dataset.v; if (S.cerr) delete S.cerr[t.dataset.cs]; drawCf(); return; }
       if (t.dataset.go) { if (t.dataset.go === 'questions') save(); go(t.dataset.go); return; }
       if (t.dataset.status) { S.status = t.dataset.status; draw(); return; }
       if (t.dataset.q) {
@@ -1899,7 +1904,7 @@ var LLP = (() => {
       }
       else if (act === 'retest') {
         t.disabled = true; t.textContent = '처음으로 돌리는 중…';
-        api('resetTest', { id }).then(() => { clear(); location.reload(); }, (err) => { t.disabled = false; t.textContent = err.message; });
+        api('resetTest', { id }).then(() => { clear(); try { sessionStorage.setItem('ll-fresh-' + id, '1'); sessionStorage.removeItem(CF_KEY); sessionStorage.removeItem(CF_KEY + '-form'); } catch (_) { /* 무시 */ } location.reload(); }, (err) => { t.disabled = false; t.textContent = err.message; });
       }
       else if (act === 'part2') { S.page = PART2_PAGE; save(); go('questions'); }
       else if (act === 'prev') { S.page -= 1; S.err = ''; save(); draw(); window.scrollTo(0, 0); }
