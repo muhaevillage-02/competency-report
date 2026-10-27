@@ -401,9 +401,9 @@ legend .no{color:#CBD5E1;margin-right:8px}
 .ap-par b{color:#22263A}
 .ap-mini{display:block;font-size:10px;color:#9A9FB2;margin-top:6px;line-height:1.5}
 .ap-fine{font-size:10px;color:#9A9FB2;line-height:1.6;margin-top:14px}
-.ap-box{border:1px solid #E6E1F5;border-radius:10px;padding:14px 18px;background:#FBFAFF}
+.ap-page .ap-box{border:1px solid #E6E1F5;border-radius:10px;padding:14px 18px;background:#FBFAFF}
 .ap-tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;color:#6C5CE7;background:#F1ECFE;border-radius:999px;padding:3px 10px;margin-bottom:6px}
-.ap-h3{font-size:13px;font-weight:800;color:#22263A;margin-bottom:8px}
+.ap-page .ap-h3{font-size:13px;font-weight:800;color:#22263A;margin:0 0 8px}
 .ap-h3 small{font-size:10.5px;font-weight:500;color:#8A8FA3;margin-left:6px}
 .ap-bdg{display:inline-block;border-radius:999px;padding:1px 8px;font-size:10px;font-weight:800;white-space:nowrap;vertical-align:1px}
 .ap-bdg.g{background:#E3F6EF;color:#0E8A6A}.ap-bdg.m{background:#EEF1FB;color:#4A5BB0}.ap-bdg.w{background:#FFEEDF;color:#C8640F}.ap-bdg.p{background:#F1ECFE;color:#6C5CE7}
@@ -559,7 +559,7 @@ legend .no{color:#CBD5E1;margin-right:8px}
 .ap-comp-hero b{display:block;font-size:17px;font-weight:800;margin-top:2px;color:#1A1D2E}
 .ap-comp-hero .d b{color:#6C5CE7}
 .ap-comp-hero p{font-size:11px;line-height:1.6;color:#4A4F66;margin-top:4px}
-.ap-comp-hero+.ap-h3{margin-top:16px}
+.ap-page .ap-comp-hero+.ap-h3{margin-top:16px}
 .ap-drs{display:grid;gap:8px}
 .ap-dr{border-bottom:1px solid #ECEAF3;padding-bottom:7px}
 .ap-dr .h{display:grid;grid-template-columns:110px 72px minmax(0,1fr);gap:8px;align-items:center}
@@ -610,20 +610,23 @@ legend .no{color:#CBD5E1;margin-right:8px}
 .ap-tbl thead th{background:#F3F1F8;font-weight:700;color:#4A4F66}
 .ap-tbl tr.on td,.ap-tbl tr.on th{background:#F6F3FF}
 .ap-tbl small{display:block;font-size:10px;color:#8A8FA3;line-height:1.5;margin-top:2px}
+.ap-prof,.ap-cmp,.ap-ctab,.ap-xtab{table-layout:fixed}
 .ap-prof td{padding:4px 9px}
-.ap-prof td:nth-child(1),.ap-prof td:nth-child(3),.ap-prof td:nth-child(4){text-align:center;width:52px}
-.ap-prof th.sc{display:table-cell;width:290px}
-.ap-prof th.sc span{display:inline-block;width:24%;font-weight:500;font-size:9.5px}
-.ap-prof th.sc span:last-child{width:auto}
+.ap-prof th{white-space:nowrap}
+.ap-prof td:nth-child(1),.ap-prof td:nth-child(3),.ap-prof td:nth-child(4){text-align:center}
+.ap-prof thead th:nth-child(1){width:46px}.ap-prof thead th:nth-child(2){width:150px}.ap-prof thead th:nth-child(3){width:56px}.ap-prof thead th:nth-child(4){width:66px}
+.ap-prof th.sc div{display:flex;justify-content:space-between;font-weight:500;font-size:9.5px}
 .ap-prof .bar{height:9px;background:#EEF0F4}
 .ap-prof .bar i{display:block;height:100%;background:linear-gradient(90deg,#E9A6CB,#8E7CF0)}
-.ap-cmp th:first-child{width:86px;background:#F3F1F8;font-weight:600;color:#4A4F66}
+.ap-cmp th:first-child{background:#F3F1F8;font-weight:600;color:#4A4F66}
+.ap-cmp thead th:first-child{width:86px}
 .ap-cmp thead th.on{color:#6C5CE7}
-.ap-ctab th{width:74px}
+.ap-ctab thead th:first-child{width:72px}
 .ap-ctab td{line-height:1.6}
 .ap-ctab b{display:block}
-.ap-xtab th{width:96px;white-space:nowrap}
-.ap-xtab td:nth-child(2){width:80px}
+.ap-xtab{margin-top:12px}
+.ap-xtab thead th:nth-child(1){width:104px}.ap-xtab thead th:nth-child(2){width:86px}
+.ap-xtab tbody th{white-space:nowrap}
 .ap-xtab td{line-height:1.6}
 
 
@@ -710,6 +713,63 @@ legend .no{color:#CBD5E1;margin-right:8px}
 .ap-fluid .ap-hero>b{font-size:18px}
 .ap-fluid .ap-intro p,.ap-fluid .ap-par,.ap-fluid .ap-cent p,.ap-fluid .ap-rk q{font-size:12.5px}
 .ap-fluid .ap-sub{font-size:12px}
+
+
+.ap-why{margin-top:12px;border-left:4px solid #2F6BFF;background:#F2F6FF;padding:11px 16px}
+.ap-why b{display:block;font-size:11px;color:#2F6BFF;margin-bottom:2px}
+.ap-why p{font-size:11.5px;line-height:1.7;color:#3A3F55}
+.ap-why strong{color:#22263A}
+.ap-dcs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ap-dc{border:1px solid #E1E3EA;border-top:3px solid var(--c);border-radius:8px;padding:11px 14px}
+.ap-dc .h{display:flex;justify-content:space-between;align-items:flex-start}
+.ap-dc .h small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.08em;color:var(--c)}
+.ap-dc .h b{font-size:14px}
+.ap-dc .bar{height:7px;border-radius:4px;background:#EEF0F4;overflow:hidden;margin:7px 0 6px}
+.ap-dc .bar i{display:block;height:100%;border-radius:4px}
+.ap-dc>p{font-size:11px;line-height:1.6;color:#4A4F66}
+.ap-dc .pt{margin-top:6px;border-radius:6px;background:#F6F7FA;padding:7px 9px}
+.ap-dc .pt b{display:block;font-size:10px;color:#6E7390}
+.ap-subs{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.ap-subs span{border-radius:999px;background:#F1F2F6;color:#6E7390;font-size:9.8px;font-weight:700;padding:2px 8px}
+.ap-subs span.g{background:#E3F6EF;color:#0E8A6A}.ap-subs span.w{background:#FFEEDF;color:#C8640F}
+.ap-res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ap-res>div{border:1px solid #E1E3EA;border-radius:8px;padding:10px 13px}
+.ap-res>div.on{border-color:#C9C0F5;background:#F6F3FF}
+.ap-res small{display:block;font-size:10px;color:#8A8FA3}
+.ap-res b{display:block;font-size:15px;color:#6C5CE7;margin-top:1px}
+.ap-res p{font-size:10.8px;line-height:1.55;color:#4A4F66;margin-top:3px}
+.ap-tip{margin-top:6px;font-size:10.5px;line-height:1.6;color:#6C5CE7;font-weight:700}
+.ap-sent{margin-top:12px}
+.ap-sent .lead{font-size:12px;font-weight:800;color:#22263A;margin-bottom:6px}
+.ap-ev{margin-top:6px;border-top:1px dashed #D8D2EA;padding-top:6px}
+.ap-ev small{display:block;font-size:10px;font-weight:700;color:#0E8A9A;margin-bottom:3px}
+.ap-ev q,.ap-qt q{display:block;font-size:10.8px;line-height:1.55;color:#3A3F55;border-left:3px solid #9FD9E2;padding:2px 0 2px 8px;margin-top:3px}
+.ap-ev q::before,.ap-qt q::before{content:'“'}.ap-ev q::after,.ap-qt q::after{content:'”'}
+.ap-jobs{margin-top:12px;border:1px solid #E1E3EA;border-radius:10px;padding:12px 16px}
+.ap-jobs .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ap-jobs .row>div{display:flex;flex-direction:column;align-items:flex-start;gap:3px;border-radius:8px;background:#F6F3FF;padding:9px 11px}
+.ap-jobs em{font-style:normal;font-size:10px;font-weight:800;color:#6C5CE7}
+.ap-jobs b{font-size:13px}
+.ap-jobs>p{font-size:11px;line-height:1.6;color:#4A4F66;margin-top:8px}
+.ap-items{border:1px solid #E1E3EA;border-radius:8px}
+.ap-items p{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 12px;border-top:1px solid #F0EEF5;font-size:11px;color:#3A3F55}
+.ap-items p:first-child{border-top:0}
+.ap-items span{font-size:10px;font-weight:800;color:#6C5CE7}
+.ap-items em{font-style:normal;font-size:10px;font-weight:800;color:#0E8A6A}
+.ap-page .ap-gap{margin-top:16px}
+.ap-bk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:8px}
+.ap-bk>div{border-radius:8px;padding:9px 12px;background:#F6F7FA}
+.ap-bk .ok{background:#E9F7F1}.ap-bk .hid{background:#F1ECFE}.ap-bk .ask{background:#FFF3E6}
+.ap-bk b{display:block;font-size:11.5px}
+.ap-bk small{display:block;font-size:9.8px;color:#8A8FA3}
+.ap-bk p{margin-top:4px}
+.ap-none{font-size:10.5px;color:#9A9FB2}
+.ap-qt th{width:104px;white-space:nowrap}
+.ap-qt th small{font-weight:600}
+.ap-q{margin-top:6px;font-size:10.8px;line-height:1.6;color:#6C5CE7;font-weight:700}
+.ap-empty b{display:block;font-size:12px;color:#22263A}
+.ap-empty p{font-size:11px;line-height:1.6;color:#6E7390;margin-top:2px}
+.ap-xtab .ap-subs{margin-top:4px}
 </style>
 <!-- /결과지 스타일 -->
 </head>
@@ -1128,13 +1188,13 @@ var LLP = (() => {
   var ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
   var ae = (s) => String(s != null ? s : "").replace(/[&<>"']/g, (c) => ESC[c]);
   var dateDot = (s) => s ? s.replace(/-/g, ". ") + "." : "-";
-  var tname = (t) => `${t}유형 ${A_NAME[t]}`;
+  var tname = (t) => `${A_NAME[t]}형`;
   var ctypeOf = (D) => D.ctypeKey === "BAL" ? CBAL : CTYPES[D.ctypeKey];
   function wingOf(D, t) {
     const l = t === 1 ? 9 : t - 1, r = t === 9 ? 1 : t + 1;
     return D.pct[l - 1] > D.pct[r - 1] ? l : r;
   }
-  var typeLine = (D) => `${D.main}유형 · ${A_NAME[D.main]} · ${D.main}w${wingOf(D, D.main)}`;
+  var typeLine = (D) => `${tname(D.main)} · 날개 ${tname(wingOf(D, D.main))}`;
   function centersOf(D) {
     return A_CENTERS.map((c) => {
       const sc = c.types.map((t) => D.s50[t - 1]);
@@ -1145,7 +1205,7 @@ var LLP = (() => {
   }
   var DOC = { client: "내담자용 결과지", counselor: "상담사용 해석 보고서" };
   var runHead = (input, k, right) => `<div class="ap-run"><b>${ae(input.name)} · 성격기질 × 핵심역량 진단 ${DOC[k]}</b><span>${ae(right)}</span></div>`;
-  var foot = (n, k) => `<div class="ap-foot"><span>${k === "client" ? `${ae(SITE.org)} × 온그로우 · 내담자용 결과지` : "상담사 전용 해석 페이지입니다 · 무단 유출을 금합니다"}</span><i>${n}</i></div>`;
+  var foot = (n, k) => `<div class="ap-foot"><span>${k === "client" ? "ONGROW Assessment · 내담자용 결과지" : "상담사 전용 해석 페이지입니다 · 무단 유출을 금합니다"}</span><i>${n}</i></div>`;
   var sec = (title, sub = "", first = false) => `<h2 class="ap-sec${first ? " first" : ""}">${title}</h2>${sub ? `<p class="ap-sub">${sub}</p>` : ""}`;
   var page = (body, cls = "") => `<section class="ap-page${cls ? " " + cls : ""}">${body}</section>`;
   function radar(D) {
@@ -1173,7 +1233,7 @@ var LLP = (() => {
       g += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${on ? 5.5 : 3.6}" fill="${on ? "#6C5CE7" : "#fff"}" stroke="#6C5CE7" stroke-width="1.8"/>`;
       const [lx, ly] = pt(t, 64);
       const a = Math.abs(lx - C) < 8 ? "middle" : lx > C ? "start" : "end";
-      g += `<text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${a}" font-size="11" font-weight="700" fill="#3A3F55">${t} ${ae(A_NAME[t])}</text><text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${a}" font-size="10.5" font-weight="${on ? 800 : 500}" fill="${on ? "#6C5CE7" : "#8A8FA3"}">${D.s50[t - 1]}</text>`;
+      g += `<text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${a}" font-size="11" font-weight="700" fill="#3A3F55">${ae(tname(t))}</text><text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${a}" font-size="10.5" font-weight="${on ? 800 : 500}" fill="${on ? "#6C5CE7" : "#8A8FA3"}">${D.s50[t - 1]}</text>`;
     });
     return `<svg class="ap-radar" viewBox="-40 -6 410 352" role="img" aria-label="9가지 성향 점수 지도">${g}</svg>`;
   }
@@ -1184,7 +1244,7 @@ var LLP = (() => {
     const cs = centersOf(D), top = [...cs].sort((a, b) => b.avg - a.avg)[0];
     return `<div class="ap-cents">${cs.map((c) => `<div class="ap-cent${c === top ? " on" : ""}"><h4><span>${c.label} <small>${c.sub}</small></span><em>평균 ${c.avg.toFixed(1)}</em></h4>
     <div class="bar"><i style="width:${Math.max(4, (c.avg - 10) / 40 * 100).toFixed(0)}%"></i></div>
-    <p class="m">${c.types.map((t, k) => `${t}유형 ${c.sc[k]}`).join(" · ")}</p><p>${ae(c.desc)}</p><p class="rep">이 중심의 대표: <b>${tname(c.rep)}</b></p></div>`).join("")}</div>`;
+    <p class="m">${c.types.map((t, k) => `${tname(t)} ${c.sc[k]}`).join(" · ")}</p><p>${ae(c.desc)}</p><p class="rep">이 중심의 대표: <b>${tname(c.rep)}</b></p></div>`).join("")}</div>`;
   }
   function centerSummary(D) {
     const cs = [...centersOf(D)].sort((a, b) => b.avg - a.avg), hi = cs[0], lo = cs[2];
@@ -1195,7 +1255,7 @@ var LLP = (() => {
     const ct = ctypeOf(D);
     return page(`${runHead(input, "client", `검사일 ${dateDot(input.testDate)}`)}
   <div class="ap-intro"><b>성격기질 × 핵심역량 진단은요</b><p>‘무엇을 하는가’보다 <strong>‘왜 그렇게 하는가’</strong>를 보는 성격 검사에, 그 성향이 어떤 핵심역량으로 이어지는지를 더했어요. 좋은 유형과 나쁜 유형은 없어요. 이 결과지는 나를 단정하는 결론이 아니라, 상담사와 함께 이야기를 시작하기 위한 정리예요.</p></div>
-  <div class="ap-hero"><small>나를 한 마디로 · ${tname(D.main)} (${D.main}w${wingOf(D, D.main)})</small><b>${ae(A_ONE[D.main])}</b>
+  <div class="ap-hero"><small>나를 한 마디로 · ${tname(D.main)}</small><b>${ae(A_ONE[D.main])}</b>
     <div class="ap-hero-k"><span>내면 동력 <b>${ae(IC[D.main].comp)}</b></span><span>역량 유형 <b>${ae(ct[0].join(" "))}</b></span></div></div>
   ${sec("한눈에 보는 성격 지도")}
   <div class="ap-map"><div class="ap-radar-w">${radar(D)}</div><div class="ap-rank">${rankCards(D)}</div></div>
@@ -1220,13 +1280,14 @@ var LLP = (() => {
   function veiled(input, D) {
     const items = [
       ["9가지 성향 자세히 보기", "성향마다 점수가 낮을 때 · 높을 때의 모습"],
-      ["나의 상위 3유형", "잘하는 점 · 자주 보이는 모습 · 이렇게 해 보세요"],
+      ["나의 상위 3개 유형", "잘하는 점 · 자주 보이는 모습 · 이렇게 해 보세요"],
       ["나의 성격 구조 · 내면의 흐름", "날개 · 성장과 스트레스 방향 · 반복되는 생각 패턴"],
       ["스트레스 대처 방향", `${STRESS_N}문항으로 본 지금의 대처 방식`],
-      ["나의 핵심역량과 강점", "4가지 핵심역량 경향 · 강점 문장 · 추천 직무 · 성장 플랜"],
+      ["나의 핵심역량", "4가지 핵심역량 경향 · 세부 역량 · 성향과 역량의 연결"],
+      ["나의 강점 · 커리어 방향", "강점 자원 · 강점 문장 · 추천 직무 · 이번 달 성장 플랜"],
       ["상담 후 적어 보기", "상담에서 알게 된 나를 정리하는 칸"]
     ];
-    const fake = [[78, 52], [64, 40], [70, 46], [58, 36], [74, 50], [50, 30]];
+    const fake = [[78, 52], [64, 40], [70, 46], [58, 36], [74, 50], [66, 44], [50, 30]];
     return page(`${runHead(input, "client", typeLine(D))}
   ${sec("결과지 전체는 상담에서 함께 열어요", `${ae(input.name)} 님의 결과지는 표지를 포함해 A4 여러 장으로 만들어졌어요. 1장 ‘한눈에 보는 나’ 다음 장들은 1:1 상담에서 연구원이 직접 설명하며 함께 봐요.`, true)}
   <div class="ap-locks">${items.map(([t, s], i) => `<div class="ap-lock"><span class="ic">${lockSvg()}</span><div><b>${i + 2}. ${ae(t)}</b><small>${ae(s)}</small><div class="rd">${fake[i].map((w) => `<i style="width:${w}%"></i>`).join("")}</div></div></div>`).join("")}</div>
@@ -1238,9 +1299,9 @@ var LLP = (() => {
     return page(`${runHead(input, "client", typeLine(D))}
   ${sec("1:1 결과 해석 상담", "결과지에 담긴 내 성향과 핵심역량을 연구원이 직접 풀어서 설명해 드려요.", true)}
   <div class="ap-meet${m ? "" : " none"}"><small>상담 일정</small><b>${m ? ae(m) : "담당 연구원이 연락드려 편한 일정으로 정할게요"}</b>${m ? `<span>소요 ${ae(SITE.duration)}</span>` : ""}</div>
-  <div class="ap-box ap-steps"><b>상담에서 함께 보는 것</b><ol><li>성격 지도와 상위 3유형 — 나를 움직이는 핵심 동기</li><li>성격 구조와 스트레스 대처 — 지칠 때와 여유로울 때의 나</li><li>4가지 핵심역량과 강점 — 나에게 맞는 직무와 성장 플랜</li></ol></div>
+  <div class="ap-box ap-steps"><b>상담에서 함께 보는 것</b><ol><li>성격 지도와 상위 3개 유형 — 나를 움직이는 핵심 동기</li><li>성격 구조와 스트레스 대처 — 지칠 때와 여유로울 때의 나</li><li>4가지 핵심역량과 강점 — 나에게 맞는 직무와 성장 플랜</li></ol></div>
   <div class="ap-thanks">${thanks}</div>
-  <p class="ap-fine">본 결과는 자가보고식 검사에 기초한 참고 자료이며 임상적 진단을 대체하지 않습니다. 역량은 성향에서 풀어낸 경향입니다.<br>문의·일정 변경 ${ae(SITE.contact)}</p>
+  <p class="ap-fine">본 결과는 자가보고식 검사에 기초한 참고 자료이며 임상적 진단을 대체하지 않습니다. 역량은 성향에서 풀어낸 경향입니다.<br>문의·일정 변경은 담당 상담사에게 편하게 연락해 주세요.</p>
   ${foot(3, "client")}`);
   }
   function participantPages(input) {
@@ -1349,11 +1410,55 @@ var LLP = (() => {
           return;
         }
         const j = await api('find', { name: st.name.trim(), phone: st.phone });
+        try { sessionStorage.setItem('ll-ok-' + j.id, '1'); } catch (_) { /* 저장소를 못 쓰면 링크 화면에서 한 번 더 확인 */ }
         location.href = '?id=' + encodeURIComponent(j.id);
       } catch (err) {
         st.busy = false; st.err = err.message; draw();
       }
     };
+  }
+
+  /* ─── 링크로 들어온 사람 확인 ─────────────────────────────── */
+  // 안내받은 이름과 연락처가 이 링크의 것과 같아야 다음(소개 이야기 · 검사)으로 넘어간다
+  function verify(id, inv) {
+    return new Promise((resolve) => {
+      const st = { name: '', phone: '', busy: false, err: '' };
+      const ready = () => st.name.trim() && st.phone.replace(/\D/g, '').length >= 4;
+      const draw = () => {
+        app.innerHTML = `<main class="dark center"><div class="wrap">
+          <p class="org">${esc(SITE.org)}</p>
+          <h1 class="h-xl">20대<br>핵심역량 진단</h1>
+          <p class="lead">${inv.done ? '결과를 보려면' : '진단을 시작하려면'} 안내받은 이름과 연락처를 입력해 주세요.</p>
+          <form class="white-card" id="vf" novalidate>
+            <div class="field"><label class="lbl" for="v-name">이름</label><input class="inp" id="v-name" maxlength="40" autocomplete="name" placeholder="홍길동" value="${esc(st.name)}"></div>
+            <div class="field"><label class="lbl" for="v-phone">연락처</label><input class="inp" id="v-phone" maxlength="30" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" value="${esc(st.phone)}"></div>
+            ${st.err ? `<p class="err" role="alert">${esc(st.err)}</p>` : ''}
+            <button class="btn ink" type="submit" style="margin-top:20px" ${!ready() || st.busy ? 'disabled' : ''}>${st.busy ? '확인 중…' : '확인'}</button>
+          </form>
+          <p class="by">${esc(SITE.org)} × ${esc(SITE.partner)} 공동 개발</p>
+        </div></main>`;
+      };
+      draw();
+      app.oninput = (e) => {
+        const t = e.target;
+        if (t.id === 'v-name') st.name = t.value;
+        if (t.id === 'v-phone') st.phone = t.value;
+        st.err = '';
+        app.querySelector('button[type=submit]').disabled = !ready();
+        const er = app.querySelector('.err[role=alert]'); if (er) er.remove();
+      };
+      app.onsubmit = async (e) => {
+        e.preventDefault();
+        if (!ready() || st.busy) return;
+        st.busy = true; st.err = ''; draw();
+        try {
+          const j = await api('find', { name: st.name.trim(), phone: st.phone });
+          if (j.id !== id) throw new Error('이 링크로 안내받은 이름과 연락처가 아니에요. 다시 확인해 주세요.');
+          app.oninput = null; app.onsubmit = null;
+          resolve();
+        } catch (err) { st.busy = false; st.err = err.message; draw(); }
+      };
+    });
   }
 
   /* ─── 검사 ───────────────────────────────────────────── */
@@ -1363,6 +1468,14 @@ var LLP = (() => {
     catch (err) {
       app.innerHTML = `<main class="dark center"><div class="wrap"><p class="org">${esc(SITE.org)}</p><h1 class="h-md">검사 링크를 열 수 없어요</h1><p class="lead">${esc(err.message)}</p><a class="btn light" href="./" style="text-align:center;text-decoration:none">첫 화면으로</a></div></main>`;
       return;
+    }
+    // 링크로 바로 들어왔으면 이름·연락처부터 확인한다 (첫 화면에서 입력하고 넘어왔으면 이미 확인됨)
+    const OK_KEY = 'll-ok-' + id;
+    let okd = false;
+    try { okd = sessionStorage.getItem(OK_KEY) === '1'; } catch (_) { /* 무시 */ }
+    if (!okd) {
+      await verify(id, inv);
+      try { sessionStorage.setItem(OK_KEY, '1'); } catch (_) { /* 무시 */ }
     }
     const KEY = 'll-draft-' + id;
     const S = {
@@ -1379,9 +1492,9 @@ var LLP = (() => {
           if (n) { S.answers = d.answers; S.page = Math.min(Math.max(d.page || 0, 0), PAGE_COUNT - 1); S.status = d.status || ''; S.interest = d.interest || ''; S.resumable = n; }
         }
       } catch (_) { /* 저장소를 못 쓰는 브라우저 */ }
-      // 처음 들어온 사람에게는 소개 이야기부터 (한 번 본 링크는 바로 초대 화면)
+      // 이름·연락처를 넣고 들어오면 소개 이야기부터 (같은 창에서 새로 고침하면 바로 초대 화면)
       let seen = false;
-      try { seen = localStorage.getItem(STORY_KEY) === '1'; } catch (_) { /* 무시 */ }
+      try { seen = sessionStorage.getItem(STORY_KEY) === '1'; } catch (_) { /* 무시 */ }
       if (!S.resumable && !seen) { S.step = 'story'; S.slide = 0; }
     }
     const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ savedAt: Date.now(), answers: S.answers, page: S.page, status: S.status, interest: S.interest })); } catch (_) { /* 무시 */ } };
@@ -1427,7 +1540,7 @@ var LLP = (() => {
         { g: '#1B97B0', hl: '#8FE3F2', html: L('st-k', 'ENERGY CENTER', 0.1) + L('st-b', '에너지가 먼저 실리는 곳은<br><em>세 갈래</em>예요', 0.25) + `<div class="st-cent">${cents}</div>` + L('st-s', '결과지에서 내 에너지가 어디에<br>얼마나 실렸는지 보여 드려요.', 1.4) },
         { g: '#2F6BFF', html: L('st-k', 'AI 시대, 기업이 찾는', 0.1) + L('st-b', '<em>4가지</em> 핵심역량', 0.25) + `<div class="st-dom">${doms}</div>` + L('st-s', '내 동력을 알면 이 중 어디가<br>강점이 되기 쉽고, 어디부터 채우면 되는지 보여요.', 1.3) + L('st-cap', `세계경제포럼(WEF) ${esc(SITE.basis.replace(/^WEF\s*/, ''))} 역량 분류`, 1.6) },
         { g: '#12A27E', hl: '#8EF0CF', html: L('st-k', '그래서 만들었어요', 0.1) + L('st-b', `${name} 님을 움직이는<br><em>힘</em>은 무엇일까요?`, 0.4)
-          + `<ul class="st-facts">${[['검사', `${Q.TOTAL}문항 · 약 ${SITE.minutes}분`], ['분석', '애니어그램 9유형으로 내면 동력 찾기'], ['해석', 'WEF 역량 분류로 핵심역량 풀기'], ['결과', '1장은 바로, 자세한 해석은 1:1 상담에서']].map(([k, v], i) => `<li class="st-l" style="--d:${(0.9 + i * 0.15).toFixed(2)}s"><b>${k}</b>${v}</li>`).join('')}</ul>`
+          + `<ul class="st-facts">${[['검사', `${Q.TOTAL}문항 · 약 ${SITE.minutes}분`], ['분석', '9가지 성향으로 내면 동력 찾기'], ['해석', 'WEF 역량 분류로 핵심역량 풀기'], ['결과', '1장은 바로, 자세한 해석은 1:1 상담에서']].map(([k, v], i) => `<li class="st-l" style="--d:${(0.9 + i * 0.15).toFixed(2)}s"><b>${k}</b>${v}</li>`).join('')}</ul>`
           + W('<button class="btn light st-go" data-act="story-done">받게 될 결과지 보기</button>', 1.6) + L('st-by', `${esc(SITE.org)} × ${esc(SITE.partner)} 공동 개발`, 1.7) },
       ];
     }
@@ -1454,7 +1567,7 @@ var LLP = (() => {
       st.querySelector('.st-row span').textContent = `${n + 1} / ${SLIDES.length}`;
     }
     function storyEnd() {
-      try { localStorage.setItem(STORY_KEY, '1'); } catch (_) { /* 무시 */ }
+      try { sessionStorage.setItem(STORY_KEY, '1'); } catch (_) { /* 무시 */ }
       go('intro');
     }
     document.addEventListener('keydown', (e) => {
