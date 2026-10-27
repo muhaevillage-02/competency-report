@@ -55,6 +55,52 @@ h1{margin:0}
 @keyframes anl-dot{to{background:var(--accent);border-color:var(--accent)}}
 @keyframes anl-ck{to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.anl li,.anl li i,.anl li i::after{animation-duration:0s;animation-delay:0s}}
+/* 시작 전 소개 — 탭해서 넘기는 이야기 */
+.story{position:fixed;inset:0;overflow:hidden;background:var(--ink);color:#fff;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;cursor:pointer}
+.st-glow{position:absolute;left:50%;top:-22%;width:150vmax;height:78vh;transform:translateX(-50%);border-radius:50%;background-color:var(--g,#2F6BFF);filter:blur(90px);opacity:.34;transition:background-color 1.1s ease;pointer-events:none}
+.st-top{position:absolute;left:0;right:0;top:0;z-index:2;padding:calc(14px + env(safe-area-inset-top)) 16px 0;max-width:560px;margin:0 auto}
+.st-bars{display:flex;gap:4px}
+.st-bars i{position:relative;flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden}
+.st-bars i.on::after{content:'';position:absolute;inset:0;background:#fff}
+.st-bars i.now::after{animation:st-fill .6s ease both}
+.st-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:12px;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,.5)}
+.st-skip{border:0;border-radius:999px;background:rgba(255,255,255,.1);padding:7px 13px;font-size:12px;font-weight:700;letter-spacing:0;color:rgba(255,255,255,.85);cursor:pointer}
+.st-stage{position:relative;z-index:1;height:100%;display:flex;overflow-y:auto;padding:calc(84px + env(safe-area-inset-top)) 22px calc(76px + env(safe-area-inset-bottom))}
+.st-in{margin:auto;width:100%;max-width:440px;text-align:center}
+.st-l{opacity:0;animation:st-up .75s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+.st-s{margin:0;font-size:16px;line-height:1.7;color:rgba(255,255,255,.62)}
+.st-k{margin:0;font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--hl,#9DB8FF)}
+.st-b{margin:16px 0;font-size:28px;font-weight:900;line-height:1.38;letter-spacing:-.025em}
+.st-b em{font-style:normal;color:var(--hl,#9DB8FF)}
+.st-tap{position:absolute;left:0;right:0;bottom:calc(22px + env(safe-area-inset-bottom));z-index:2;text-align:center;font-size:12px;font-weight:700;color:rgba(255,255,255,.42);animation:st-pulse 2.2s ease-in-out infinite;pointer-events:none}
+.st-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:20px 0 18px;text-align:left}
+.st-chip{position:relative;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.06);padding:12px 10px 11px}
+.st-chip b{display:block;font-size:15px;font-weight:900;color:var(--c)}
+.st-chip span{display:block;margin-top:4px;font-size:11px;line-height:1.45;color:rgba(255,255,255,.6)}
+.st-chip.pick{border-color:var(--c);background:rgba(255,255,255,.13)}
+.st-chip em{position:absolute;right:8px;top:-9px;border-radius:999px;background:var(--c);padding:2px 8px;font-size:10.5px;font-style:normal;font-weight:800;color:#fff}
+.st-cent{display:grid;gap:10px;margin:20px 0 18px;text-align:left}
+.st-c{display:grid;grid-template-columns:56px minmax(0,1fr);gap:14px;align-items:center;border-radius:16px;background:rgba(255,255,255,.06);padding:14px}
+.st-c i{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--c);font-size:13px;font-style:normal;font-weight:900;box-shadow:0 0 24px var(--c)}
+.st-c b{display:block;font-size:16px;font-weight:900}
+.st-c span{display:block;margin-top:2px;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.62)}
+.st-c small{display:block;margin-top:6px;font-size:11.5px;font-weight:800;color:var(--c)}
+.st-dom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:20px 0 18px;text-align:left}
+.st-d{border-radius:16px;background:rgba(255,255,255,.06);padding:16px 14px;border-top:3px solid var(--c)}
+.st-d small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.08em;color:var(--c)}
+.st-d b{display:block;margin-top:4px;font-size:16px;font-weight:900}
+.st-cap{margin:0;font-size:11.5px;color:rgba(255,255,255,.42)}
+.st-facts{display:grid;gap:8px;margin:22px 0 0;padding:0;list-style:none;text-align:left}
+.st-facts li{display:flex;gap:12px;align-items:center;border-radius:14px;background:rgba(255,255,255,.06);padding:13px 16px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.82)}
+.st-facts li b{flex:0 0 auto;min-width:30px;font-size:12px;font-weight:800;color:var(--hl,#9DB8FF)}
+.st-go{margin-top:24px}
+.st-by{margin:16px 0 0;font-size:11px;font-weight:700;letter-spacing:.04em;color:rgba(255,255,255,.38)}
+@keyframes st-up{from{opacity:0;transform:translateY(14px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes st-fill{from{transform:translateX(-100%)}to{transform:none}}
+@keyframes st-pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.st-l,.st-bars i.now::after,.st-tap{animation:none;opacity:1}.st-glow{transition:none}}
+@media (max-height:640px){.st-b{font-size:24px;margin:12px 0}.st-s{font-size:15px}}
+.again{display:block;margin:20px auto 0;border:0;background:none;font-size:13px;font-weight:700;color:var(--soft);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .form{margin-top:32px}
 .field+.field{margin-top:20px}
 .lbl{display:block;font-size:14px;font-weight:700;color:#334155}
@@ -549,6 +595,9 @@ var LLP = (() => {
   // participant-entry.ts
   var participant_entry_exports = {};
   __export(participant_entry_exports, {
+    DOMAINS: () => DOMAINS,
+    IC: () => IC,
+    IGROUPS: () => IGROUPS,
     participantPages: () => participantPages,
     sampleAnswers: () => sampleAnswers
   });
@@ -867,6 +916,7 @@ var LLP = (() => {
       answers: Array(Q.TOTAL).fill(null), page: 0, busy: false, err: '', resumable: 0, already: inv.done
     };
     const meeting = meetText(inv.meeting);
+    const STORY_KEY = 'll-story-' + id;
     if (!inv.done) {
       try {
         const d = JSON.parse(localStorage.getItem(KEY) || 'null');
@@ -875,6 +925,10 @@ var LLP = (() => {
           if (n) { S.answers = d.answers; S.page = Math.min(Math.max(d.page || 0, 0), PAGE_COUNT - 1); S.status = d.status || ''; S.interest = d.interest || ''; S.resumable = n; }
         }
       } catch (_) { /* 저장소를 못 쓰는 브라우저 */ }
+      // 처음 들어온 사람에게는 소개 이야기부터 (한 번 본 링크는 바로 초대 화면)
+      let seen = false;
+      try { seen = localStorage.getItem(STORY_KEY) === '1'; } catch (_) { /* 무시 */ }
+      if (!S.resumable && !seen) { S.step = 'story'; S.slide = 0; }
     }
     const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ savedAt: Date.now(), answers: S.answers, page: S.page, status: S.status, interest: S.interest })); } catch (_) { /* 무시 */ } };
     const clear = () => { try { localStorage.removeItem(KEY); } catch (_) { /* 무시 */ } };
@@ -900,7 +954,74 @@ var LLP = (() => {
       return p ? `<div class="pv"><p class="pv-t">검사가 끝나면 이런 결과지를 바로 받아요 <span>예시</span></p><div class="pv-crop"><div class="ptc-fit"><div>${p[0]}</div></div></div><p class="pv-s">내 응답으로 만든 1장 ‘한눈에 보기’가 검사 직후 열리고, 자세한 해석과 직무 추천은 1:1 상담에서 함께 봐요.</p></div>` : '';
     }
 
+    // 시작 전 소개 이야기: 화면을 누르면 다음 장 (왼쪽 끝을 누르면 이전 장)
+    function storySlides() {
+      const IC = LLP.IC, G = LLP.IGROUPS;
+      const STYLE = { 장: '행동형', 가슴: '감정형', 머리: '사고형' };
+      const L = (cls, html, d) => `<p class="st-l ${cls}" style="--d:${d}s">${html}</p>`;
+      const W = (html, d) => `<div class="st-l" style="--d:${d}s">${html}</div>`;
+      const PICK = { 1: '서연', 7: '지훈' };
+      const grid = G.map((g) => g.types.map((t, k) => W(`<div class="st-chip${PICK[t] ? ' pick' : ''}" style="--c:${g.color}">${PICK[t] ? `<em>${PICK[t]}</em>` : ''}<b>${esc(IC[t].comp)}</b><span>${esc(IC[t].what)}</span></div>`, (0.45 + (G.indexOf(g) * 3 + k) * 0.08).toFixed(2))).join('')).join('');
+      const cents = G.map((g, k) => W(`<div class="st-c" style="--c:${g.color}"><i>${STYLE[g.key]}</i><div><b>${esc(g.name)}</b><span>${esc(g.sub)}</span><small>${g.types.map((t) => esc(IC[t].comp)).join(' · ')}</small></div></div>`, (0.5 + k * 0.25).toFixed(2))).join('');
+      const doms = LLP.DOMAINS.map(([, n, en, c], k) => W(`<div class="st-d" style="--c:${c}"><small>${esc(en.toUpperCase())}</small><b>${esc(n)}</b></div>`, (0.5 + k * 0.15).toFixed(2))).join('');
+      const name = esc(S.name || inv.name);
+      return [
+        { g: '#2F6BFF', html: L('st-s', '같은 과제, 같은 팀플,<br>같은 인턴 자리에서도', 0.1) + L('st-b', '누구는 끝까지 해내고<br>누구는 금방 <em>지쳐요</em>', 0.8) + L('st-s', '그 차이는 어디서 올까요?', 1.6) },
+        { g: '#7B5CF0', hl: '#C8B8FF', html: L('st-k', '23살 · 서연', 0.1) + L('st-b', '계획표는 누구보다<br><em>꼼꼼하게</em> 세워요', 0.5) + L('st-s', '그런데 마감 전날이면<br>‘아직 부족해’ 하며<br>처음부터 다시 고치곤 해요.', 1.3) },
+        { g: '#1B97B0', hl: '#8FE3F2', html: L('st-k', '25살 · 지훈', 0.1) + L('st-b', '아이디어는 누구보다<br><em>많아요</em>', 0.5) + L('st-s', '그런데 끝까지 간 프로젝트는<br>손에 꼽아요.<br>늘 다음 재미있는 일이 먼저 보이거든요.', 1.3) },
+        { g: '#E0508A', hl: '#FFB3D1', html: L('st-s', '둘 다 게으르거나<br>실력이 부족해서가 아니에요', 0.1) + L('st-b', '나를 움직이는<br><em>내면 동력</em>이 달라서예요', 0.9) + L('st-s', '같은 노력도 내 동력에 맞게 써야<br>강점이 돼요.', 1.7) },
+        { g: '#6C4CF1', html: L('st-k', 'INNER DRIVE', 0.1) + L('st-b', '내면 동력은 <em>9가지</em>', 0.25) + `<div class="st-grid">${grid}</div>` + L('st-s', '서연은 원칙력, 지훈은 확장력에 가까워요.', 1.4) },
+        { g: '#1B97B0', hl: '#8FE3F2', html: L('st-k', 'ENERGY CENTER', 0.1) + L('st-b', '에너지가 먼저 실리는 곳은<br><em>세 갈래</em>예요', 0.25) + `<div class="st-cent">${cents}</div>` + L('st-s', '결과지에서 내 에너지가 어디에<br>얼마나 실렸는지 보여 드려요.', 1.4) },
+        { g: '#2F6BFF', html: L('st-k', 'AI 시대, 기업이 찾는', 0.1) + L('st-b', '<em>4가지</em> 핵심역량', 0.25) + `<div class="st-dom">${doms}</div>` + L('st-s', '내 동력을 알면 이 중 어디가<br>강점이 되기 쉽고, 어디부터 채우면 되는지 보여요.', 1.3) + L('st-cap', `세계경제포럼(WEF) ${esc(SITE.basis.replace(/^WEF\s*/, ''))} 역량 분류`, 1.6) },
+        { g: '#12A27E', hl: '#8EF0CF', html: L('st-k', '그래서 만들었어요', 0.1) + L('st-b', `${name} 님을 움직이는<br><em>힘</em>은 무엇일까요?`, 0.4)
+          + `<ul class="st-facts">${[['검사', `${Q.TOTAL}문항 · 약 ${SITE.minutes}분`], ['분석', '애니어그램 9유형으로 내면 동력 찾기'], ['해석', 'WEF 역량 분류로 핵심역량 풀기'], ['결과', '1장은 바로, 자세한 해석은 1:1 상담에서']].map(([k, v], i) => `<li class="st-l" style="--d:${(0.9 + i * 0.15).toFixed(2)}s"><b>${k}</b>${v}</li>`).join('')}</ul>`
+          + W('<button class="btn light st-go" data-act="story-done">받게 될 결과지 보기</button>', 1.6) + L('st-by', `${esc(SITE.org)} × ${esc(SITE.partner)} 공동 개발`, 1.7) },
+      ];
+    }
+    let SLIDES = null;
+    function storyHTML() {
+      const n = S.slide, sl = SLIDES[n];
+      return {
+        bars: SLIDES.map((_, k) => `<i class="${k < n ? 'on' : k === n ? 'on now' : ''}"></i>`).join(''),
+        stage: `<div class="st-in" style="${sl.hl ? `--hl:${sl.hl}` : ''}">${sl.html}</div>`,
+        tap: n < SLIDES.length - 1 ? '탭하여 계속' : '',
+      };
+    }
+    function storyGo(n) {
+      if (n < 0 || n >= SLIDES.length) return;
+      S.slide = n;
+      const st = app.querySelector('.story');
+      if (!st) { draw(); return; }
+      const h = storyHTML();
+      st.style.setProperty('--g', SLIDES[n].g);
+      st.querySelector('.st-bars').innerHTML = h.bars;
+      st.querySelector('.st-stage').innerHTML = h.stage;
+      st.querySelector('.st-stage').scrollTop = 0;
+      st.querySelector('.st-tap').textContent = h.tap;
+      st.querySelector('.st-row span').textContent = `${n + 1} / ${SLIDES.length}`;
+    }
+    function storyEnd() {
+      try { localStorage.setItem(STORY_KEY, '1'); } catch (_) { /* 무시 */ }
+      go('intro');
+    }
+    document.addEventListener('keydown', (e) => {
+      if (S.step !== 'story') return;
+      if (e.key === 'ArrowRight' || e.key === ' ' || (e.key === 'Enter' && !e.target.closest('button'))) { e.preventDefault(); storyGo(S.slide + 1); }
+      else if (e.key === 'ArrowLeft') storyGo(S.slide - 1);
+      else if (e.key === 'Escape') storyEnd();
+    });
+
     function draw() {
+      if (S.step === 'story') {
+        if (!SLIDES) SLIDES = storySlides();
+        const h = storyHTML();
+        app.innerHTML = `<div class="story" style="--g:${SLIDES[S.slide].g}" role="region" aria-label="진단 소개 — 화면을 누르면 다음으로 넘어가요">
+          <div class="st-glow"></div>
+          <div class="st-top"><div class="st-bars">${h.bars}</div><div class="st-row"><span>${S.slide + 1} / ${SLIDES.length}</span><button type="button" class="st-skip" data-act="story-skip">건너뛰기</button></div></div>
+          <div class="st-stage" aria-live="polite">${h.stage}</div>
+          <p class="st-tap">${h.tap}</p></div>`;
+        return;
+      }
       if (S.step === 'intro') {
         app.innerHTML = `<main class="dark"><div class="wrap">
           <p class="org">${esc(SITE.org)}</p>
@@ -920,6 +1041,7 @@ var LLP = (() => {
           ${S.resumable ? `<button class="btn light" data-go="form">이어서 하기 · ${S.resumable}/${Q.TOTAL} 응답함</button><button class="btn ghost" data-act="restart">처음부터 다시 하기</button>`
             : `<button class="btn light" data-go="form">시작하기</button>`}
           ${inv.test ? '<p class="fine" style="color:var(--soft)">테스트 계정이에요. 결과를 본 뒤 언제든 처음부터 다시 해볼 수 있고, 응답은 연구 통계에 쓰이지 않아요.</p>' : ''}
+          <button type="button" class="again" data-act="story-again">진단 소개 다시 보기</button>
           <p class="fine">응답은 안전하게 보관하며, 연구 활용에 동의한 경우에만<br>이름·연락처를 지운 뒤 통계로 분석합니다.</p>
         </div></main>`;
         fitPages();
@@ -1029,8 +1151,16 @@ var LLP = (() => {
       if (t.id === 't-research') S.research = t.checked;
     };
     app.onclick = (e) => {
+      if (S.step === 'story') {
+        const b = e.target.closest('button');
+        if (b && b.dataset.act === 'story-skip') storyEnd();
+        else if (b && b.dataset.act === 'story-done') storyEnd();
+        else if (!b) storyGo(e.clientX < window.innerWidth * 0.28 ? S.slide - 1 : S.slide + 1);
+        return;
+      }
       const t = e.target.closest('button,[data-go]');
       if (!t) return;
+      if (t.dataset.act === 'story-again') { S.slide = 0; go('story'); return; }
       if (t.dataset.go) { if (t.dataset.go === 'questions') save(); go(t.dataset.go); return; }
       if (t.dataset.status) { S.status = t.dataset.status; draw(); return; }
       if (t.dataset.q) {
