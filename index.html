@@ -156,6 +156,9 @@ legend .no{color:#CBD5E1;margin-right:8px}
 .dn-s{margin:6px 0 0;font-size:14px;line-height:1.6;color:rgba(255,255,255,.65)}
 .dn-cf{margin-top:48px;padding:8px 0 48px;background:#1D2C52;box-shadow:0 0 0 100vmax #1D2C52;clip-path:inset(0 -100vmax);border-top:1px solid rgba(255,255,255,.08)}
 .dn-cf .cf-card{margin-top:18px}
+.chips.mbti{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.chips.mbti .chip{padding:10px 0;font-size:13px;letter-spacing:.04em}
+.chips.mbti .chip:last-child{grid-column:1/-1;letter-spacing:0}
 .cf-note{margin:0;font-size:13px;color:#94A3B8}
 .cf-card{margin-top:28px;border-radius:18px;background:#fff;color:var(--ink);padding:28px 20px 24px}
 .cf-title{margin:0;font-size:22px;font-weight:900;color:var(--ink)}
@@ -1581,6 +1584,7 @@ var LLP = (() => {
       gender: ['남성', '여성'],
       times: ['오전 (8–12시)', '오후 (12–17시)', '저녁 (17–21시)', '불규칙해서 협의가 필요해요'],
       notes: ['정신과 약 복용중', '정신과 상담 고민중', '심리상담 개별 진행중', '해당사항 없음'],
+      mbti: ['ISTJ', 'ISFJ', 'INFJ', 'INTJ', 'ISTP', 'ISFP', 'INFP', 'INTP', 'ESTP', 'ESFP', 'ENFP', 'ENTP', 'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ', '잘 모르겠어요'],
     };
     const CF_KEY = 'll-consult-' + id;
     const consulted = () => { try { return sessionStorage.getItem(CF_KEY) === '1'; } catch (_) { return false; } };
@@ -1591,7 +1595,7 @@ var LLP = (() => {
       let ph = '';
       try { ph = sessionStorage.getItem('ll-ph-' + id) || ''; } catch (_) { /* 무시 */ }
       S.cf = { name: S.name.trim() || inv.name, phone: ph, birthday: '', university: '', location: '', interests: [], timeInvestment: '', weeklyFixed: '', concern: '',
-        goals: [], goalsOther: '', plans: '', evening: '', premium: '', gender: '', times: [], notes: [], notesOther: '' };
+        goals: [], goalsOther: '', plans: '', evening: '', premium: '', gender: '', times: [], notes: [], notesOther: '', mbti: '' };
     }
     function cfErrors() {
       const f = S.cf, E = {}, has = (v) => String(v || '').trim().length > 0;
@@ -1640,7 +1644,7 @@ var LLP = (() => {
           name: f.name.trim(), phone: f.phone, birthday: f.birthday.trim(), university: f.university.trim(), location: f.location.trim(),
           interests: f.interests, timeInvestment: f.timeInvestment.trim(), weeklyFixed: f.weeklyFixed.trim(), concern: f.concern.trim(),
           goals: other(f.goals, f.goalsOther), plans: f.plans.trim(), evening: f.evening, premium: f.premium, gender: f.gender,
-          times: f.times, notes: other(f.notes, f.notesOther), summary,
+          times: f.times, notes: other(f.notes, f.notesOther), mbti: f.mbti || '', summary,
         } });
         try { sessionStorage.setItem(CF_KEY, '1'); sessionStorage.setItem(CF_KEY + '-form', JSON.stringify(S.cf)); } catch (_) { /* 무시 */ }
         S.busy = false; S.cfEdit = false; drawCf();
@@ -1665,6 +1669,7 @@ var LLP = (() => {
         ${fld('birthday', '생년월일을 입력해 주세요', inp('birthday', '예) 010101', 'inputmode="numeric"'))}
         ${fld('university', '현재 재학 중인 대학교와 전공을 알려 주세요', inp('university'), false, '대학생만 적어 주세요')}
         ${fld('location', '사는 곳을 적어 주세요 (동까지)', inp('location', '예) 서울 마포구 서교동'))}
+        ${fld('mbti', 'MBTI를 알려 주세요', `<div class="chips mbti">${CF.mbti.map((o) => `<button type="button" class="chip" data-cs="mbti" data-v="${esc(o)}" aria-pressed="${f.mbti === o}">${esc(o)}</button>`).join('')}</div>`, false, '알고 있다면 골라 주세요 · 한 번 더 누르면 지워져요')}
         <h2 class="cf-sec">현재 관심사 및 고민</h2>
         ${fld('interests', '현재 관심 있는 분야를 모두 선택해 주세요', multi('interests', CF.interests))}
         ${fld('timeInvestment', '평소에 시간을 투자하는 것은 어떤 것이 있나요?', inp('timeInvestment', '예) 직장, 학교, 학원, 자기계발 등'))}
@@ -1903,7 +1908,7 @@ var LLP = (() => {
       if (t.dataset.act === 'cf-again') { S.cfEdit = true; S.err = ''; S.cerr = {}; drawCf(); return; }
       if (t.dataset.act === 'cf-submit') { cfSubmit(); return; }
       if (t.dataset.cf) { const a = S.cf[t.dataset.cf], v = t.dataset.v; S.cf[t.dataset.cf] = a.includes(v) ? a.filter((x) => x !== v) : a.concat(v); if (S.cerr) delete S.cerr[t.dataset.cf]; drawCf(); return; }
-      if (t.dataset.cs) { S.cf[t.dataset.cs] = t.dataset.v; if (S.cerr) delete S.cerr[t.dataset.cs]; drawCf(); return; }
+      if (t.dataset.cs) { const k = t.dataset.cs; S.cf[k] = k === 'mbti' && S.cf[k] === t.dataset.v ? '' : t.dataset.v; if (S.cerr) delete S.cerr[k]; drawCf(); return; }
       if (t.dataset.go) { if (t.dataset.go === 'questions') save(); go(t.dataset.go); return; }
       if (t.dataset.status) { S.status = t.dataset.status; draw(); return; }
       if (t.dataset.q) {
