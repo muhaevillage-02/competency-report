@@ -145,10 +145,22 @@ legend .no{color:#CBD5E1;margin-right:8px}
 .cst-t{margin:0;font-size:17px;font-weight:900;color:#fff}
 .cst p{margin:6px 0 0;font-size:14px;line-height:1.65;color:rgba(255,255,255,.75)}
 .cst .btn{margin-top:16px}
+.dark.dn{padding-bottom:0}
+.dn-nav{position:sticky;top:0;z-index:5;display:flex;gap:6px;margin:24px -24px 0;padding:10px 24px;background:rgba(19,32,63,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
+.dn-nav button{flex:1;min-height:40px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:transparent;color:rgba(255,255,255,.78);font-size:13px;font-weight:800;cursor:pointer}
+.dn-nav button.on{background:var(--soft);border-color:transparent;color:var(--ink)}
+.dn-sec{scroll-margin-top:64px}
+.dn-head{padding-top:28px}
+.dn-k{display:inline-block;border-radius:999px;background:rgba(220,231,255,.14);color:var(--soft);font-size:11px;font-weight:800;letter-spacing:.12em;padding:3px 10px}
+.dn-h{margin:10px 0 0;font-size:22px;font-weight:900;color:#fff}
+.dn-s{margin:6px 0 0;font-size:14px;line-height:1.6;color:rgba(255,255,255,.65)}
+.dn-cf{margin-top:48px;padding:8px 0 48px;background:#1D2C52;box-shadow:0 0 0 100vmax #1D2C52;clip-path:inset(0 -100vmax);border-top:1px solid rgba(255,255,255,.08)}
+.dn-cf .cf-card{margin-top:18px}
+.cf-note{margin:0;font-size:13px;color:#94A3B8}
 .cf-card{margin-top:28px;border-radius:18px;background:#fff;color:var(--ink);padding:28px 20px 24px}
 .cf-title{margin:0;font-size:22px;font-weight:900;color:var(--ink)}
 .cf-card .desc{margin-top:8px;font-size:14px;line-height:1.65;color:#64748B}
-.cf-card .cf-sec:first-of-type{margin-top:24px}
+.cf-card .cf-sec:first-of-type{margin-top:16px;padding-top:0;border-top:0}
 .cf-done{text-align:center;padding:12px 0}
 .cf-done b{display:block;font-size:20px;font-weight:900;color:var(--ink)}
 .cf-done p{margin:8px 0 0;font-size:14px;line-height:1.65;color:#64748B}
@@ -1600,6 +1612,16 @@ var LLP = (() => {
       if (!f.notes.length) E.notes = '하나 이상 선택해 주세요.'; else if (f.notes.includes('기타') && !has(f.notesOther)) E.notes = '기타 내용을 적어 주세요.';
       return E;
     }
+    // 결과 화면 위쪽 버튼에 지금 보고 있는 구역(결과지 / 신청서)을 표시
+    let navScroll = null;
+    function watchNav() {
+      if (navScroll) window.removeEventListener('scroll', navScroll);
+      const nav = document.getElementById('dn-nav'), cf = document.getElementById('sec-cf');
+      if (!nav || !cf) return;
+      navScroll = () => { const on = cf.getBoundingClientRect().top < window.innerHeight * 0.45; nav.querySelectorAll('button').forEach((b) => b.classList.toggle('on', (b.dataset.to === 'sec-cf') === on)); };
+      window.addEventListener('scroll', navScroll, { passive: true });
+      navScroll();
+    }
     // 결과 화면 아래 신청서 카드만 다시 그린다 (결과지는 그대로)
     const drawCf = () => { const box = document.getElementById('cf'); if (box) box.innerHTML = consultHTML(); else draw(); };
     async function cfSubmit() {
@@ -1636,7 +1658,7 @@ var LLP = (() => {
       const inp = (k, ph = '', extra = '') => `<input class="inp" data-cfi="${k}" maxlength="${k === 'name' ? 40 : 300}" placeholder="${esc(ph)}" value="${esc(f[k])}" ${extra}>`;
       const ta = (k, ph = '') => `<textarea class="inp ta" data-cfi="${k}" maxlength="2000" placeholder="${esc(ph)}">${esc(f[k])}</textarea>`;
       const fld = (k, label, body, req = true, hint = '') => `<div class="field cf" id="cf-${k}"><p class="lbl">${label}${req ? ' <i class="req">*</i>' : ''}${hint ? `<small>${hint}</small>` : ''}</p>${body}${E[k] ? `<p class="err">${esc(E[k])}</p>` : ''}</div>`;
-      return `<p class="cf-eye">1:1 CONSULTING</p><h2 class="cf-title">컨설팅 예약 신청</h2><p class="desc">결과 상담에서 한 걸음 더 — 진로 방향, 취업 전략, 멘탈 코칭까지 담당 컨설턴트와 함께 계획을 세우고 싶다면 아래 내용을 작성해 주세요. 검토 후 연락드려요.</p>
+      return `<p class="cf-note"><i class="req">*</i> 표시는 꼭 적어 주세요.</p>
         <h2 class="cf-sec">기본 정보</h2>
         ${fld('name', '성함을 입력해 주세요', inp('name', '예) 홍길동', 'autocomplete="name"'))}
         ${fld('phone', '전화번호를 입력해 주세요', inp('phone', '예) 01012345678', 'type="tel" inputmode="tel" autocomplete="tel"'))}
@@ -1796,20 +1818,25 @@ var LLP = (() => {
         return;
       }
       if (S.step === 'done') {
-        app.innerHTML = `<main class="dark"><div class="wrap">
+        const fine = `<p class="fine">이 진단은 ${esc(SITE.org)}와 상담 단체 ${esc(SITE.partner)}가 함께 만들었어요.<br>${esc(SITE.basis)} 역량 분류 기반 · ${Q.TOTAL}문항</p>`;
+        app.innerHTML = `<main class="dark dn"><div class="wrap">
           <p class="org" style="letter-spacing:0;font-size:14px">${S.already ? '이미 제출했어요' : '제출 완료'}</p>
           <h1 class="h-md">${esc(S.name.trim() || inv.name)} 님의<br>결과지가 나왔어요</h1>
           <p class="lead">1장 ‘한눈에 보는 나’는 지금 바로 볼 수 있어요. 9가지 성향 풀이, 성격 구조, 스트레스 대처, 핵심역량·직무 추천이 담긴 전체 결과지는 <b style="color:#fff">1:1 상담에서 연구원이 직접 열어 설명</b>해 드려요.</p>
+          ${S.pages ? '<nav class="dn-nav" id="dn-nav" aria-label="결과 화면 구역"><button type="button" class="on" data-act="jump" data-to="sec-res">① 내 결과지</button><button type="button" data-act="jump" data-to="sec-cf">② 컨설팅 예약 신청</button></nav>' : ''}
+          <section class="dn-sec" id="sec-res"><div class="dn-head"><span class="dn-k">STEP 1</span><h2 class="dn-h">내 결과지</h2><p class="dn-s">1장은 지금 바로 · 2·3장은 1:1 상담에서 함께 열어요</p></div>
           ${S.pages
             ? `<div class="ptc-stack">${S.pages.map((p, i) => `<p class="ptc-label">${i + 1}장 · ${['한눈에 보는 나', '결과지 전체 구성', '상담 안내'][i]}${i === 1 ? '<span>상담에서 공개</span>' : ''}</p><div class="ap-fluid">${p}</div>`).join('')}</div>`
             : `<div class="card"><p style="margin:0;font-size:14px;color:#64748B">${S.resultErr ? esc(S.resultErr) : '결과지를 불러오는 중…'}</p></div>`}
-          ${S.pages ? `<section class="cf-card" id="cf">${consultHTML()}</section>` : ''}
-          <p class="fine">이 진단은 ${esc(SITE.org)}와 상담 단체 ${esc(SITE.partner)}가 함께 만들었어요.<br>${esc(SITE.basis)} 역량 분류 기반 · ${Q.TOTAL}문항</p>
           ${inv.test ? `<a class="btn light" href="admin.html#/r/${encodeURIComponent(id)}" style="text-align:center;text-decoration:none">테스트 계정 · 전체 결과지 보기</a>
             <p class="fine" style="margin-top:8px">고객용 결과지 3장 전부와 상담사용 자료가 열려요 · 관리자 비밀번호 필요</p>
             <button class="btn ghost" data-act="retest">테스트 계정 · 처음부터 다시 해보기</button>` : ''}
+          </section>
+          ${S.pages ? `<section class="dn-sec dn-cf" id="sec-cf"><div class="dn-head"><span class="dn-k">STEP 2</span><h2 class="dn-h">1:1 컨설팅 예약 신청</h2><p class="dn-s">결과 상담에서 한 걸음 더 — 진로 방향, 취업 전략, 멘탈 코칭까지 담당 컨설턴트와 함께 계획을 세우고 싶다면 작성해 주세요. 검토 후 연락드려요.</p></div>
+            <div class="cf-card" id="cf">${consultHTML()}</div>${fine}</section>` : fine}
         </div></main>`;
         fitPages();
+        watchNav();
         return;
       }
       // questions
@@ -1872,6 +1899,7 @@ var LLP = (() => {
       const t = e.target.closest('button,[data-go]');
       if (!t) return;
       if (t.dataset.act === 'story-again') { S.slide = 0; go('story'); return; }
+      if (t.dataset.act === 'jump') { const el = document.getElementById(t.dataset.to); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
       if (t.dataset.act === 'cf-again') { S.cfEdit = true; S.err = ''; S.cerr = {}; drawCf(); return; }
       if (t.dataset.act === 'cf-submit') { cfSubmit(); return; }
       if (t.dataset.cf) { const a = S.cf[t.dataset.cf], v = t.dataset.v; S.cf[t.dataset.cf] = a.includes(v) ? a.filter((x) => x !== v) : a.concat(v); if (S.cerr) delete S.cerr[t.dataset.cf]; drawCf(); return; }
