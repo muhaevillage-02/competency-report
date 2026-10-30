@@ -1510,7 +1510,12 @@ var LLP = (() => {
         st.busy = true; st.err = ''; draw();
         try {
           const j = await api('find', { name: st.name.trim(), phone: st.phone });
-          if (j.id !== id) throw new Error('이 링크로 안내받은 이름과 연락처가 아니에요. 다시 확인해 주세요.');
+          // 다른 사람 링크(공용으로 돌린 짧은 링크 등)로 들어왔어도, 등록된 본인이면 본인 검사로 옮겨 준다
+          if (j.id !== id) {
+            try { sessionStorage.setItem('ll-ok-' + j.id, '1'); sessionStorage.setItem('ll-fresh-' + j.id, '1'); sessionStorage.setItem('ll-ph-' + j.id, st.phone.replace(/\D/g, '')); } catch (_) { /* 무시 */ }
+            location.replace('?id=' + encodeURIComponent(j.id));
+            return;
+          }
           try { sessionStorage.setItem('ll-ph-' + id, st.phone.replace(/\D/g, '')); sessionStorage.setItem('ll-fresh-' + id, '1'); } catch (_) { /* 무시 */ }
           app.oninput = null; app.onsubmit = null;
           resolve();
