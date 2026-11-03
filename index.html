@@ -1249,9 +1249,9 @@ var LLP = (() => {
       return { ...c, sc, avg, rep };
     });
   }
-  var DOC = { client: "내담자용 결과지", counselor: "상담사용 해석 보고서" };
-  var runHead = (input, k, right) => `<div class="ap-run"><b>${ae(input.name)} · 성격기질 × 핵심역량 진단 ${DOC[k]}</b><span>${ae(right)}</span></div>`;
-  var foot = (n, k) => `<div class="ap-foot"><span>${k === "client" ? "ONGROW Assessment · 내담자용 결과지" : "상담사 전용 해석 페이지입니다 · 무단 유출을 금합니다"}</span><i>${n}</i></div>`;
+  var DOC = { client: "내담자용 결과지", counselor: "상담사용 해석 보고서", ennea: "분석지" };
+  var runHead = (input, k, right) => `<div class="ap-run"><b>${ae(input.name)} · ${k === "ennea" ? "성격기질" : "성격기질 × 핵심역량 진단"} ${DOC[k]}</b><span>${ae(right)}</span></div>`;
+  var foot = (n, k) => `<div class="ap-foot"><span>${k === "client" ? "ONGROW Assessment · 내담자용 결과지" : k === "ennea" ? "ONGROW Assessment · 성격기질 분석지" : "상담사 전용 해석 페이지입니다 · 무단 유출을 금합니다"}</span><i>${n}</i></div>`;
   var sec = (title, sub = "", first = false) => `<h2 class="ap-sec${first ? " first" : ""}">${title}</h2>${sub ? `<p class="ap-sub">${sub}</p>` : ""}`;
   var page = (body, cls = "") => `<section class="ap-page${cls ? " " + cls : ""}">${body}</section>`;
   function radar(D) {
@@ -1330,18 +1330,18 @@ var LLP = (() => {
   }
   function veiled(input, D) {
     const items = [
-      ["9가지 성향 자세히 보기", "성향마다 점수가 낮을 때 · 높을 때의 모습"],
-      ["나의 상위 3개 유형", "잘하는 점 · 자주 보이는 모습 · 이렇게 해 보세요"],
-      ["나의 성격 구조 · 내면의 흐름", "날개 · 성장과 스트레스 방향 · 반복되는 생각 패턴"],
-      ["스트레스 대처 방향", `${STRESS_N}문항으로 본 지금의 대처 방식`],
-      ["나의 핵심역량", "4가지 핵심역량 경향 · 세부 역량 · 성향과 역량의 연결"],
-      ["나의 강점 · 커리어 방향", "강점 자원 · 강점 문장 · 추천 직무 · 이번 달 성장 플랜"],
-      ["상담 후 적어 보기", "상담에서 알게 된 나를 정리하는 칸"]
+      ["역량분석지 · 4가지 핵심역량", "나의 역량 유형 · 영역별 경향 · 성향이 역량으로 이어지는 방식"],
+      ["역량분석지 · 12가지 세부 역량", "강점이 되기 쉬운 역량 · 채우면 좋은 역량"],
+      ["역량분석지 · 강점과 커리어 방향", "강점 문장 · 추천 직무 · 4주 성장 플랜"],
+      ["성격기질 분석지 · 나의 마음 곡선", "지나온 시간을 곡선으로 그리며 나를 돌아보기"],
+      ["성격기질 분석지 · 나의 유형과 내면의 흐름", "성격 지도 · 세 가지 중심 · 9가지 성향 · 반복되는 생각 패턴"],
+      ["성격기질 분석지 · 스트레스와 내면 자아", `${STRESS_N}문항 스트레스 대처 · 표면 자아와 내면 자아`],
+      ["성격기질 분석지 · 나를 들여다보는 질문", "상담에서 함께 적는 칸"]
     ];
     const fake = [[78, 52], [64, 40], [70, 46], [58, 36], [74, 50], [66, 44], [50, 30]];
     return page(`${runHead(input, "client", typeLine(D))}
-  ${sec("결과지 전체는 상담에서 함께 열어요", `${ae(input.name)} 님의 결과지는 표지를 포함해 A4 여러 장으로 만들어졌어요. 1장 ‘한눈에 보는 나’ 다음 장들은 1:1 상담에서 연구원이 직접 설명하며 함께 봐요.`, true)}
-  <div class="ap-locks">${items.map(([t, s], i) => `<div class="ap-lock"><span class="ic">${lockSvg()}</span><div><b>${i + 2}. ${ae(t)}</b><small>${ae(s)}</small><div class="rd">${fake[i].map((w) => `<i style="width:${w}%"></i>`).join("")}</div></div></div>`).join("")}</div>
+  ${sec("결과지 전체는 상담에서 함께 열어요", `${ae(input.name)} 님의 결과는 역량분석지와 성격기질 분석지, 두 가지 용지로 만들어졌어요. 1:1 상담에서 연구원과 상담사가 직접 설명하며 함께 봐요.`, true)}
+  <div class="ap-locks">${items.map(([t, s], i) => `<div class="ap-lock"><span class="ic">${lockSvg()}</span><div><b>${ae(t)}</b><small>${ae(s)}</small><div class="rd">${fake[i].map((w) => `<i style="width:${w}%"></i>`).join("")}</div></div></div>`).join("")}</div>
   ${foot(2, "client")}`);
   }
   function guide(input, D) {
@@ -1350,7 +1350,7 @@ var LLP = (() => {
     return page(`${runHead(input, "client", typeLine(D))}
   ${sec("1:1 결과 해석 상담", "결과지에 담긴 내 성향과 핵심역량을 연구원이 직접 풀어서 설명해 드려요.", true)}
   ${m && m.cands ? `<div class="ap-meet"><small>상담 일정 · 알려 주신 가능 일정</small><ol class="ap-cands">${m.cands.map((c) => `<li>${ae(c)}</li>`).join("")}</ol><span>이 중에서 확정되면 담당 연구원이 연락드려요${m.place ? " · " + ae(m.place) : ""} · 소요 ${ae(SITE.duration)}</span></div>` : `<div class="ap-meet${m ? "" : " none"}"><small>상담 일정</small><b>${m ? ae(m.one) : "담당 연구원이 연락드려 편한 일정으로 정할게요"}</b>${m ? `<span>소요 ${ae(SITE.duration)}</span>` : ""}</div>`}
-  <div class="ap-box ap-steps"><b>상담에서 함께 보는 것</b><ol><li>성격 지도와 상위 3개 유형 — 나를 움직이는 핵심 동기</li><li>성격 구조와 스트레스 대처 — 지칠 때와 여유로울 때의 나</li><li>4가지 핵심역량과 강점 — 나에게 맞는 직무와 성장 플랜</li></ol></div>
+  <div class="ap-box ap-steps"><b>상담에서 함께 보는 것</b><ol><li>역량분석지 — 4가지 핵심역량과 강점, 나에게 맞는 직무와 성장 플랜</li><li>나의 마음 곡선 — 지나온 시간을 곡선으로 그리며 돌아보기</li><li>성격기질 분석지 — 나를 움직이는 핵심 동기와 내면 자아</li></ol></div>
   <div class="ap-thanks">${thanks}</div>
   <p class="ap-fine">본 결과는 자가보고식 검사에 기초한 참고 자료이며 임상적 진단을 대체하지 않습니다. 역량은 성향에서 풀어낸 경향입니다.<br>문의·일정 변경은 담당 상담사에게 편하게 연락해 주세요.</p>
   ${foot(3, "client")}`);
@@ -1592,7 +1592,7 @@ var LLP = (() => {
     // ─── 컨설팅 예약 신청 (결과 화면 맨 아래) — 보기는 서버 Code.gs 의 CONSULT_OPTS 와 같아야 해요 ───
     const CF = {
       interests: ['취업', '창업', '자기계발', '인간관계', '이직'],
-      goals: ['진로 방향 설정', '구체적인 취업 전략', '멘탈 코칭 및 케어', '자기계발'],
+      goals: ['나의 성향과 동기 이해하기', '숨은 강점과 가능성 발견', '멘탈 코칭 및 케어', '자기계발'],
       evening: ['저녁엔 모임이나 약속이 많아 일정 잡기 어려움', '주 2~3회 정도는 비울 수 있음', '평일 저녁은 대부분 자유로움', '오히려 늦은 밤(21시 이후)에 여유가 있음'],
       premium: ['희망함', '희망하지 않음'],
       gender: ['남성', '여성'],
@@ -1605,7 +1605,7 @@ var LLP = (() => {
     function cfInit() {
       if (S.cf) return;
       // 이 창에서 이미 보낸 신청서가 있으면 그 내용으로 (고쳐서 다시 보낼 때)
-      try { const sent = JSON.parse(sessionStorage.getItem(CF_KEY + '-form') || 'null'); if (sent && Array.isArray(sent.interests)) { S.cf = sent; return; } } catch (_) { /* 무시 */ }
+      try { const sent = JSON.parse(sessionStorage.getItem(CF_KEY + '-form') || 'null'); if (sent && Array.isArray(sent.interests)) { sent.goals = (sent.goals || []).filter((x) => x === '기타' || CF.goals.includes(x)); S.cf = sent; return; } } catch (_) { /* 무시 */ }
       let ph = '';
       try { ph = sessionStorage.getItem('ll-ph-' + id) || ''; } catch (_) { /* 무시 */ }
       S.cf = { name: S.name.trim() || inv.name, phone: ph, birthday: '', university: '', location: '', interests: [], timeInvestment: '', weeklyFixed: '', concern: '',
@@ -1851,7 +1851,7 @@ var LLP = (() => {
             <p class="fine" style="margin-top:8px">고객용 결과지 3장 전부와 상담사용 자료가 열려요 · 관리자 비밀번호 필요</p>
             <button class="btn ghost" data-act="retest">테스트 계정 · 처음부터 다시 해보기</button>` : ''}
           </section>
-          ${S.pages ? `<section class="dn-sec dn-cf" id="sec-cf"><div class="dn-head"><span class="dn-k">STEP 2</span><h2 class="dn-h">1:1 컨설팅 예약 신청</h2><p class="dn-s">결과 상담에서 한 걸음 더 — 진로 방향, 취업 전략, 멘탈 코칭까지 담당 컨설턴트와 함께 계획을 세우고 싶다면 작성해 주세요. 검토 후 연락드려요.</p></div>
+          ${S.pages ? `<section class="dn-sec dn-cf" id="sec-cf"><div class="dn-head"><span class="dn-k">STEP 2</span><h2 class="dn-h">1:1 컨설팅 예약 신청</h2><p class="dn-s">결과 상담에서 한 걸음 더 — 나의 성향과 동기, 숨은 강점, 멘탈 코칭까지 담당 컨설턴트와 더 깊이 들여다보고 싶다면 작성해 주세요. 검토 후 연락드려요.</p></div>
             <div class="cf-card" id="cf">${consultHTML()}</div>${fine}</section>` : fine}
         </div></main>`;
         fitPages();
