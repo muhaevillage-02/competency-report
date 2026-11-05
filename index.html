@@ -1669,6 +1669,7 @@ var LLP = (() => {
     // ─── 컨설팅 예약 신청 (결과 화면 맨 아래) — 보기는 서버 Code.gs 의 CONSULT_OPTS 와 같아야 해요 ───
     const CF = {
       interests: ['취업', '창업', '자기계발', '인간관계', '이직'],
+      hours: ['주 5시간 미만', '주 5~10시간', '주 10~20시간', '주 20시간 이상'],
       goals: ['나의 성향과 동기 이해하기', '숨은 강점과 가능성 발견', '멘탈 코칭 및 케어', '자기계발'],
       evening: ['저녁엔 모임이나 약속이 많아 일정 잡기 어려움', '주 2~3회 정도는 비울 수 있음', '평일 저녁은 대부분 자유로움', '오히려 늦은 밤(21시 이후)에 여유가 있음'],
       premium: ['희망함', '희망하지 않음'],
@@ -1685,7 +1686,7 @@ var LLP = (() => {
       try { const sent = JSON.parse(sessionStorage.getItem(CF_KEY + '-form') || 'null'); if (sent && Array.isArray(sent.interests)) { sent.goals = (sent.goals || []).filter((x) => x === '기타' || CF.goals.includes(x)); S.cf = sent; return; } } catch (_) { /* 무시 */ }
       let ph = '';
       try { ph = sessionStorage.getItem('ll-ph-' + id) || ''; } catch (_) { /* 무시 */ }
-      S.cf = { name: S.name.trim() || inv.name, phone: ph, birthday: '', university: '', location: '', interests: [], timeInvestment: '', weeklyFixed: '', concern: '',
+      S.cf = { name: S.name.trim() || inv.name, phone: ph, birthday: '', university: '', location: '', interests: [], timeInvestment: '', hours: '', concern: '',
         goals: [], goalsOther: '', plans: '', evening: '', premium: '', gender: '', times: [], notes: [], notesOther: '', mbti: '' };
     }
     function cfErrors() {
@@ -1696,7 +1697,7 @@ var LLP = (() => {
       if (!has(f.location)) E.location = '사는 곳을 입력해 주세요.';
       if (!f.interests.length) E.interests = '관심 분야를 하나 이상 선택해 주세요.';
       if (!has(f.timeInvestment)) E.timeInvestment = '내용을 입력해 주세요.';
-      if (!has(f.weeklyFixed)) E.weeklyFixed = '내용을 입력해 주세요.';
+      if (!f.hours) E.hours = '하나를 선택해 주세요.';
       if (!f.evening) E.evening = '하나를 선택해 주세요.';
       if (!has(f.concern)) E.concern = '고민을 적어 주세요.';
       if (!f.goals.length) E.goals = '하나 이상 선택해 주세요.'; else if (f.goals.includes('기타') && !has(f.goalsOther)) E.goals = '기타 내용을 적어 주세요.';
@@ -1733,7 +1734,7 @@ var LLP = (() => {
       try {
         await api('consult', { id, form: {
           name: f.name.trim(), phone: f.phone, birthday: f.birthday.trim(), university: f.university.trim(), location: f.location.trim(),
-          interests: f.interests, timeInvestment: f.timeInvestment.trim(), weeklyFixed: f.weeklyFixed.trim(), concern: f.concern.trim(),
+          interests: f.interests, timeInvestment: f.timeInvestment.trim(), hours: f.hours, weeklyFixed: f.hours /* 예전 서버도 받게 */, concern: f.concern.trim(),
           goals: other(f.goals, f.goalsOther), plans: f.plans.trim(), evening: f.evening, premium: f.premium, gender: f.gender,
           times: f.times, notes: other(f.notes, f.notesOther), mbti: f.mbti || '', summary,
         } });
@@ -1764,7 +1765,7 @@ var LLP = (() => {
         <h2 class="cf-sec">현재 관심사 및 고민</h2>
         ${fld('interests', '현재 관심 있는 분야를 모두 선택해 주세요', multi('interests', CF.interests))}
         ${fld('timeInvestment', '평소에 시간을 투자하는 것은 어떤 것이 있나요?', inp('timeInvestment', '예) 직장, 학교, 학원, 자기계발 등'))}
-        ${fld('weeklyFixed', '이 외에 일주일 스케줄 안에서 꼭 들어가는 것이 있나요?', inp('weeklyFixed', '예) 자격증 준비, 학회 참여, 동아리 참석 등'))}
+        ${fld('hours', '위에 적은 것에 일주일에 쓰는 시간은 모두 합쳐 어느 정도인가요?', one('hours', CF.hours))}
         ${fld('evening', '계획을 이루기 위해, 평일 저녁이나 야간 시간 활용에 대한 본인 상황은 어떤가요?', one('evening', CF.evening))}
         ${fld('concern', '현재 가지고 있는 고민을 적어 주세요', ta('concern'))}
         <h2 class="cf-sec">목표 및 컨설팅 기대</h2>
