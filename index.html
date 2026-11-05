@@ -1787,21 +1787,16 @@ var LLP = (() => {
       const IC = LLP.IC, G = LLP.IGROUPS;
       const L = (cls, html, d) => `<p class="st-l ${cls}" style="--d:${d}s">${html}</p>`;
       const W = (html, d) => `<div class="st-l" style="--d:${d}s">${html}</div>`;
-      const PICK = { 1: '서연', 7: '지훈' };
-      const grid = G.map((g) => g.types.map((t, k) => W(`<div class="st-chip${PICK[t] ? ' pick' : ''}" style="--c:${g.color}">${PICK[t] ? `<em>${PICK[t]}</em>` : ''}<b>${esc(IC[t].comp)}</b><span>${esc(IC[t].what)}</span></div>`, (0.45 + (G.indexOf(g) * 3 + k) * 0.08).toFixed(2))).join('')).join('');
+      const grid = G.map((g) => g.types.map((t, k) => W(`<div class="st-chip" style="--c:${g.color}"><b>${esc(IC[t].comp)}</b><span>${esc(IC[t].what)}</span></div>`, (0.45 + (G.indexOf(g) * 3 + k) * 0.08).toFixed(2))).join('')).join('');
       const cents = LLP.A_CENTERS.map((c, k) => W(`<div class="st-c" style="--c:${G.find((g) => g.key === c.key).color}"><i>${c.label}</i><div><b>${c.label} · ${c.sub}</b><span>${esc(c.desc)}</span><small>${c.types.map((t) => esc(IC[t].comp)).join(' · ')}</small></div></div>`, (0.5 + k * 0.25).toFixed(2))).join('');
       const doms = LLP.DOMAINS.map(([, n, en, c], k) => W(`<div class="st-d" style="--c:${c}"><small>${esc(en.toUpperCase())}</small><b>${esc(n)}</b></div>`, (0.5 + k * 0.15).toFixed(2))).join('');
       const name = esc(S.name || inv.name);
       return [
-        { g: '#2F6BFF', html: L('st-s', '같은 과제, 같은 팀플,<br>같은 인턴 자리에서도', 0.1) + L('st-b', '누구는 끝까지 해내고<br>누구는 금방 <em>지쳐요</em>', 0.8) + L('st-s', '그 차이는 어디서 올까요?', 1.6) },
-        { g: '#7B5CF0', hl: '#C8B8FF', html: L('st-k', '23살 · 서연', 0.1) + L('st-b', '계획표는 누구보다<br><em>꼼꼼하게</em> 세워요', 0.5) + L('st-s', '그런데 마감 전날이면<br>‘아직 부족해’ 하며<br>처음부터 다시 고치곤 해요.', 1.3) },
-        { g: '#1B97B0', hl: '#8FE3F2', html: L('st-k', '25살 · 지훈', 0.1) + L('st-b', '아이디어는 누구보다<br><em>많아요</em>', 0.5) + L('st-s', '그런데 끝까지 간 프로젝트는<br>손에 꼽아요.<br>늘 다음 재미있는 일이 먼저 보이거든요.', 1.3) },
-        { g: '#E0508A', hl: '#FFB3D1', html: L('st-s', '둘 다 게으르거나<br>실력이 부족해서가 아니에요', 0.1) + L('st-b', '나를 움직이는<br><em>내면 동력</em>이 달라서예요', 0.9) + L('st-s', '같은 노력도 내 동력에 맞게 써야<br>강점이 돼요.', 1.7) },
-        { g: '#6C4CF1', html: L('st-k', 'INNER DRIVE', 0.1) + L('st-b', '내면 동력은 <em>9가지</em>', 0.25) + `<div class="st-grid">${grid}</div>` + L('st-s', '서연은 원칙력, 지훈은 확장력에 가까워요.', 1.4) },
+        { g: '#6C4CF1', html: L('st-k', `${name} 님, 검사를 시작하기 전에`, 0.1) + L('st-b', '사람마다 나를 움직이는<br><em>내면 동력</em>이 달라요', 0.25) + `<div class="st-grid">${grid}</div>` + L('st-s', '9가지 중 나를 가장 크게 움직이는 힘을 찾고,<br>그 힘이 어떤 강점이 되는지 알려 드려요.', 1.4) },
         { g: '#1B97B0', hl: '#8FE3F2', html: L('st-k', 'ENERGY CENTER', 0.1) + L('st-b', '에너지가 먼저 실리는 곳은<br><em>세 갈래</em>예요', 0.25) + `<div class="st-cent">${cents}</div>` + L('st-s', '결과지에서 내 에너지가 어디에<br>얼마나 실렸는지 보여 드려요.', 1.4) },
         { g: '#2F6BFF', html: L('st-k', 'AI 시대, 기업이 찾는', 0.1) + L('st-b', '<em>4가지</em> 핵심역량', 0.25) + `<div class="st-dom">${doms}</div>` + L('st-s', '내 동력을 알면 이 중 어디가<br>강점이 되기 쉽고, 어디부터 채우면 되는지 보여요.', 1.3) + L('st-cap', `세계경제포럼(WEF) ${esc(SITE.basis.replace(/^WEF\s*/, ''))} 역량 분류`, 1.6) },
-        { g: '#6C4CF1', html: L('st-k', 'RESULT PREVIEW', 0.1) + L('st-b', '검사가 끝나면<br>이런 <em>역량분석지</em>를 받아요', 0.25) + W(`<div class="st-kt">${compTeaser()}</div>`, 0.6) + L('st-s', '안의 내용은 가려 두었어요.<br>1:1 상담 때 연구원이 직접 알려 드려요. <span class="st-pv-t">예시</span>', 1.0) },
-        { g: '#12A27E', hl: '#8EF0CF', html: L('st-k', '그래서 만들었어요', 0.1) + L('st-b', `${name} 님을 움직이는<br><em>힘</em>은 무엇일까요?`, 0.4)
+        { g: '#6C4CF1', html: L('st-k', 'RESULT PREVIEW', 0.1) + L('st-b', '검사가 끝나면<br>이런 <em>역량분석지</em>를 받아요', 0.25) + W(`<div class="st-kt">${compTeaser()}</div>`, 0.6) + L('st-s', '안의 내용은 가려 두었어요.<br>1:1 상담 때 알려 드려요. <span class="st-pv-t">예시</span>', 1.0) },
+        { g: '#12A27E', hl: '#8EF0CF', html: L('st-k', '이제 시작해 볼까요', 0.1) + L('st-b', `${name} 님을 움직이는<br><em>힘</em>은 무엇일까요?`, 0.4)
           + `<ul class="st-facts">${[['검사', `${Q.TOTAL}문항 · 약 ${SITE.minutes}분`], ['분석', '9가지 성향으로 내면 동력 찾기'], ['해석', 'WEF 역량 분류로 핵심역량 풀기'], ['결과', '1장은 바로, 자세한 해석은 1:1 상담에서']].map(([k, v], i) => `<li class="st-l" style="--d:${(0.9 + i * 0.15).toFixed(2)}s"><b>${k}</b>${v}</li>`).join('')}</ul>`
           + W('<button class="btn light st-go" data-act="story-start">테스트 시작하기</button>', 1.6) + L('st-by', `${esc(SITE.org)} × ${esc(SITE.partner)} 공동 개발`, 1.7) },
       ];
