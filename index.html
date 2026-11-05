@@ -1663,9 +1663,7 @@ var LLP = (() => {
       </div></div>`;
     }
     function previewHTML() {
-      const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-      const p = LLP.participantPages({ name: S.name || inv.name, reportNo: 'LL-예시', testDate: today, status: '대학생', research: true, meeting: {}, answers: LLP.sampleAnswers(2) });
-      return p ? `<div class="pv"><p class="pv-t">검사가 끝나면 이런 결과지를 바로 받아요 <span>예시</span></p><div class="pv-crop"><div class="ap-fluid">${p[0]}</div></div><p class="pv-s">내 응답으로 만든 1장 ‘한눈에 보는 나’가 검사 직후 열리고, 9가지 성향 풀이·핵심역량·직무 추천이 담긴 전체 결과지는 1:1 상담에서 함께 봐요.</p></div>` : '';
+      return `<div class="pv"><p class="pv-t">검사가 끝나면 이런 역량분석지를 받아요 <span>예시</span></p>${compTeaser()}<p class="pv-s">안의 내용은 가려 두었어요. 1:1 상담 때 알려 드려요. 검사 직후에는 1장 ‘한눈에 보는 나’를 바로 볼 수 있어요.</p></div>`;
     }
 
     // ─── 컨설팅 예약 신청 (결과 화면 맨 아래) — 보기는 서버 Code.gs 의 CONSULT_OPTS 와 같아야 해요 ───
@@ -1853,7 +1851,7 @@ var LLP = (() => {
           <div class="stats"><div><b>${Q.TOTAL}</b><span>문항</span></div><div><b>${SITE.minutes}분</b><span>소요 시간</span></div><div><b>1:1</b><span>결과 상담</span></div></div>
           <div class="card"><h2>이렇게 진행돼요</h2><ol>
             <li><b class="n">1.</b> 문장을 읽고 지금의 나에 가까운 정도를 고르면 돼요. 정답은 없어요.</li>
-            <li><b class="n">2.</b> 제출하면 결과지 1장 ‘한눈에 보기’를 바로 볼 수 있어요. 자세한 해석은 <b>상담에서 연구원이 결과지와 함께 직접 설명</b>해 드려요.</li></ol>
+            <li><b class="n">2.</b> 제출하면 결과지 1장 ‘한눈에 보기’를 바로 볼 수 있어요. 자세한 해석은 <b>1:1 상담 때 알려 드려요.</b></li></ol>
             ${meeting ? `<div class="meet"><b>상담 일정</b>${esc(meeting)}</div>` : ''}</div>
           ${previewHTML()}
           <div class="trust"><h2>이 진단은 이렇게 만들었어요</h2><ul>
