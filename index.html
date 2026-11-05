@@ -1600,7 +1600,9 @@ var LLP = (() => {
     const KEY = 'll-draft-' + id;
     const S = {
       step: inv.done ? 'done' : 'intro', name: inv.name, status: '', interest: '', consent: false, research: false, open: false,
-      answers: Array(Q.TOTAL).fill(null), page: 0, busy: false, err: '', resumable: 0, already: inv.done
+      answers: Array(Q.TOTAL).fill(null), page: 0, busy: false, err: '', resumable: 0, already: inv.done,
+      // 검사는 마쳤는데 컨설팅 폼을 아직 안 낸 사람이 다시 들어오면 컨설팅 폼부터 (예전 서버는 consulted 를 안 줘서 평소 화면)
+      cfFirst: inv.done && inv.consulted === false
     };
     const meeting = meetText(inv.meeting);
     const STORY_KEY = 'll-story-' + id;
@@ -1744,7 +1746,7 @@ var LLP = (() => {
     }
     function consultHTML() {
       cfInit();
-      if (consulted() && !S.cfEdit) {
+      if ((consulted() || inv.consulted) && !S.cfEdit) {
         return `<div class="cf-done"><div class="cf-ok">✓</div><b>신청 완료!</b><p>담당 컨설턴트가 검토 후<br>입력하신 번호로 연락드립니다. 감사합니다.</p><button type="button" class="btn ghost-ink" data-act="cf-again">내용 고쳐서 다시 보내기</button></div>`;
       }
       const f = S.cf, E = S.cerr || {};
@@ -1915,6 +1917,17 @@ var LLP = (() => {
       }
       if (S.step === 'done') {
         const fine = `<p class="fine">이 진단은 ${esc(SITE.org)}와 상담 단체 ${esc(SITE.partner)}가 함께 만들었어요.<br>${esc(SITE.basis)} 역량 분류 기반 · ${Q.TOTAL}문항</p>`;
+        if (S.cfFirst) {
+          app.innerHTML = `<main class="dark dn"><div class="wrap">
+            <p class="org" style="letter-spacing:0;font-size:14px">검사는 이미 마쳤어요</p>
+            <h1 class="h-md">${esc(S.name.trim() || inv.name)} 님,<br>컨설팅 신청만 남았어요</h1>
+            <p class="lead">아래 신청서를 내면 담당 컨설턴트가 검토 후 입력하신 번호로 연락드려요.</p>
+            <section class="dn-sec dn-cf" id="sec-cf"><div class="dn-head"><span class="dn-k">마지막 단계</span><h2 class="dn-h">1:1 컨설팅 예약 신청</h2><p class="dn-s">나의 성향과 동기, 숨은 강점, 멘탈 코칭까지 담당 컨설턴트와 더 깊이 들여다봐요.</p></div>
+              <div class="cf-card" id="cf">${consultHTML()}</div>
+              <button type="button" class="btn ghost" data-act="show-result" style="margin-top:16px">내 결과지 다시 보기</button>${fine}</section>
+          </div></main>`;
+          return;
+        }
         app.innerHTML = `<main class="dark dn"><div class="wrap">
           <p class="org" style="letter-spacing:0;font-size:14px">${S.already ? '이미 제출했어요' : '제출 완료'}</p>
           <h1 class="h-md">${esc(S.name.trim() || inv.name)} 님의<br>결과지가 나왔어요</h1>
@@ -1996,6 +2009,7 @@ var LLP = (() => {
       if (!t) return;
       if (t.dataset.act === 'story-again') { S.slide = 0; go('story'); return; }
       if (t.dataset.act === 'jump') { const el = document.getElementById(t.dataset.to); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+      if (t.dataset.act === 'show-result') { S.cfFirst = false; draw(); window.scrollTo(0, 0); return; }
       if (t.dataset.act === 'cf-again') { S.cfEdit = true; S.err = ''; S.cerr = {}; drawCf(); return; }
       if (t.dataset.act === 'cf-submit') { cfSubmit(); return; }
       if (t.dataset.cf) { const a = S.cf[t.dataset.cf], v = t.dataset.v; S.cf[t.dataset.cf] = a.includes(v) ? a.filter((x) => x !== v) : a.concat(v); if (S.cerr) delete S.cerr[t.dataset.cf]; drawCf(); return; }
