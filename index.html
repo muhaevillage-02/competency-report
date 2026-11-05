@@ -186,6 +186,51 @@ legend .no{color:#CBD5E1;margin-right:8px}
 .qnote{margin:0 0 4px;border-radius:12px;background:var(--tint);padding:12px 14px;font-size:14px;line-height:1.6;color:var(--ink)}
 .pv-crop .ap-page{border-radius:14px}
 .pv-s{margin:10px 0 0;font-size:13px;line-height:1.6;color:rgba(255,255,255,.7)}
+.kt{background:#fff;color:#13213C;border-radius:14px;overflow:hidden;font-size:12px;line-height:1.5;text-align:left}
+.kt-band{height:10px;background:#0F2D63;border-bottom:3px solid #2B63D9}
+.kt-in{padding:10px 16px 16px}
+.kt-run{display:flex;justify-content:space-between;gap:8px;font-size:9px;font-weight:800;letter-spacing:.1em;color:#0F2D63}
+.kt-run span:last-child{font-weight:500;letter-spacing:0;color:#5C6B85;white-space:nowrap}
+.kt-title{padding:12px 0 10px;border-bottom:3px solid #0F2D63}
+.kt-title small{display:block;font-size:9px;font-weight:800;letter-spacing:.22em;color:#2B63D9}
+.kt-title b{display:block;font-size:30px;font-weight:900;letter-spacing:-1px;line-height:1.15;color:#0F2D63}
+.kt-title p{margin:2px 0 0;font-size:12px;color:#3B4A66}
+.kt-sec{display:flex;gap:8px;align-items:center;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid #CBD7EC}
+.kt-sec em{flex:0 0 auto;font-style:normal;font-size:10.5px;font-weight:900;line-height:1;color:#fff;background:#2B63D9;padding:4px 6px}
+.kt-sec b{font-size:13.5px;font-weight:900;color:#0F2D63;line-height:1.3}
+.kt-veil{position:relative}
+.kt-blur{filter:blur(4px);opacity:.8;user-select:none;pointer-events:none}
+.kt-pill{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;padding:8px 15px;border-radius:999px;background:#0F2D63;color:#fff;font-size:12.5px;font-weight:800;white-space:nowrap;box-shadow:0 6px 18px rgba(15,45,99,.28)}
+.kt-type{display:grid;grid-template-columns:1.5fr 1fr;border:1px solid #0F2D63;margin-top:12px}
+.kt-type>div{padding:10px 12px;min-width:0}
+.kt-type .a{background:#0F2D63;color:#fff}
+.kt-type .b{background:#EDF2FB;color:#0F2D63}
+.kt-type small{display:block;font-size:9.5px;font-weight:700;opacity:.75}
+.kt-type b{display:block;font-size:15px;font-weight:900;margin-top:3px;line-height:1.35}
+.kt-type p{margin:4px 0 0;font-size:10.5px;line-height:1.5;opacity:.85}
+.kt-rs{border-top:2px solid #0F2D63}
+.kt-r{padding:8px 0;border-bottom:1px solid #DCE4F2}
+.kt-r .top{display:grid;grid-template-columns:14px minmax(0,1fr) 64px 24px;gap:8px;align-items:center}
+.kt-r .rk{font-weight:900;color:#2B63D9}
+.kt-r .nm{font-size:12.5px;font-weight:800;color:#0F2D63;min-width:0}
+.kt-r .trk{height:8px;background:#EDF2FB;position:relative}
+.kt-r .trk i{position:absolute;left:0;top:0;bottom:0;background:#2B63D9}
+.kt-r em{font-style:normal;font-size:15px;font-weight:900;text-align:right;color:#0F2D63}
+.kt-r p{margin:5px 0 0 22px;font-size:10.5px;line-height:1.55;color:#3B4A66}
+.kt-r .subs{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0 0 22px}
+.kt-r .subs span{font-size:10px;color:#3B4A66;border:1px solid #DCE4F2;padding:1px 7px}
+.kt-lock{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#F6F8FD;border-top:2px solid #0F2D63}
+.kt-lock+.kt-lock{margin-top:8px}
+.kt-lock svg{flex:0 0 auto;margin-top:2px}
+.kt-lock div{min-width:0;flex:1}
+.kt-lock b{display:block;font-size:12.5px;font-weight:800;color:#0F2D63}
+.kt-lock small{display:block;font-size:10.5px;color:#5C6B85;margin-top:1px}
+.kt-lock .rd{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.kt-lock .rd i{display:block;height:6px;border-radius:3px;background:#DCE4F2}
+.kt-lock .tag{flex:0 0 auto;font-size:10px;font-weight:800;color:#2B63D9;border:1px solid #2B63D9;border-radius:3px;padding:1px 6px;white-space:nowrap}
+.st-pv .kt-pill{top:58px;transform:translateX(-50%)}
+.kt-note{margin:12px 0 0;font-size:9.5px;line-height:1.5;color:#5C6B85;border-top:1px solid #0F2D63;padding-top:6px}
+.st-pv .kt{border-radius:14px}
 .tfill{display:block;margin:0 0 24px auto;border:1px dashed #CBD5E1;border-radius:999px;background:#F8FAFC;padding:6px 14px;font-size:12px;font-weight:700;color:#64748B;cursor:pointer}
 .lk button{border:1px solid #E2E8F0;background:#fff;border-radius:12px;padding:12px 0;font-size:11px;font-weight:700;line-height:1.25;color:#64748B;cursor:pointer;min-height:48px}
 .lk button span{display:block}
@@ -1577,16 +1622,34 @@ var LLP = (() => {
     });
     window.addEventListener('resize', fitPages);
 
-    // 시작 전에 ‘이런 결과지를 받아요’ — 내 이름으로 만든 1장 예시 (응답은 예시 값)
-    function samplePage1() {
-      const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-      const p = LLP.participantPages({ name: S.name || inv.name, reportNo: 'LL-예시', testDate: today, status: '대학생', research: true, meeting: {}, answers: LLP.sampleAnswers(2) });
-      return p ? p[0] : '';
+    // 시작 전에 ‘이런 역량분석지를 받아요’ — 상담에서 받는 역량분석지 모양에 내 이름만 넣고, 안의 내용은 가린다
+    //  (가린 자리에는 예시 문장만 넣는다 — 실제 해석·점수는 이 파일에 넣지 않는다)
+    const KT_SUBS = { T: ['AI 도구 활용·프롬프트', '비판적 평가·데이터 검증', '디지털 리터러시·윤리'], S: ['분석적·비판적 사고', '창의적 사고·문제 재정의', '구조적 문제 해결'],
+      A: ['회복탄력성·유연성', '호기심·평생 학습', '자기주도·멘탈 관리'], L: ['공감·소통', '협업·심리적 안전감', '윤리·책임 리더십'] };
+    const KT_LOCK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    function compTeaser() {
+      const name = esc(S.name || inv.name), bars = [82, 66, 50, 36];
+      const rows = LLP.DOMAINS.map(([k, n], i) => `<div class="kt-r"><div class="top"><span class="rk">${i + 1}</span><span class="nm">${esc(n)}</span><span class="trk"><i style="width:${bars[i]}%"></i></span><em>··</em></div>
+        <p>이 영역에서 내 성향이 강점이 되는 모습과 채우면 좋은 점을 상담에서 함께 읽어요.</p><div class="subs">${KT_SUBS[k].map((x) => `<span>${esc(x)}</span>`).join('')}</div></div>`).join('');
+      const lock = (t, s, w) => `<div class="kt-lock"><span style="color:#2B63D9">${KT_LOCK}</span><div><b>${t}</b><small>${s}</small><div class="rd">${w.map((x) => `<i style="width:${x}%"></i>`).join('')}</div></div><span class="tag">상담 때 공개</span></div>`;
+      return `<div class="kt"><div class="kt-band"></div><div class="kt-in">
+        <div class="kt-run"><span>COMPETENCY ANALYSIS REPORT · 역량분석지</span><span>${name} 님</span></div>
+        <div class="kt-title"><small>COMPETENCY ANALYSIS REPORT</small><b>역량분석지</b><p>성향으로 본 나의 4가지 핵심역량</p></div>
+        <div class="kt-veil"><div class="kt-blur" aria-hidden="true">
+          <div class="kt-type"><div class="a"><small>나의 역량 유형</small><b>내 응답으로 정해지는 역량 유형</b><p>네 영역의 경향을 함께 읽어 정한 유형이에요.</p></div><div class="b"><small>나를 움직이는 내면 동력</small><b>○○력</b><p>나를 움직이는 힘</p></div></div>
+          <div class="kt-sec"><em>01</em><b>4가지 핵심역량 · 12가지 세부 역량</b></div>
+          <div class="kt-rs">${rows}</div>
+        </div><div class="kt-pill">${KT_LOCK}상담 때 알려 드려요</div></div>
+        <div class="kt-sec"><em>02</em><b>나의 강점</b></div>
+        ${lock('강점이 빛나는 순간 · 강점 문장', '자기소개서·면접에 쓰는 나만의 강점 표현', [72, 54])}
+        <div class="kt-sec"><em>03</em><b>추천 직무와 4주 성장 플랜</b></div>
+        ${lock('나에게 맞는 직무', '역량 경향과 내면 동기로 함께 본 직무', [60, 44])}
+        ${lock('4주 맞춤 성장 플랜', '채우면 좋은 역량부터 주차별 실천 과제', [66, 48])}
+        <p class="kt-note">본 보고서는 자가보고식 검사로 본 핵심역량 경향을 정리한 참고 자료이며, 실력을 잰 점수가 아닙니다.</p>
+      </div></div>`;
     }
     function previewHTML() {
-      const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-      const p = LLP.participantPages({ name: S.name || inv.name, reportNo: 'LL-예시', testDate: today, status: '대학생', research: true, meeting: {}, answers: LLP.sampleAnswers(2) });
-      return p ? `<div class="pv"><p class="pv-t">검사가 끝나면 이런 결과지를 바로 받아요 <span>예시</span></p><div class="pv-crop"><div class="ap-fluid">${p[0]}</div></div><p class="pv-s">내 응답으로 만든 1장 ‘한눈에 보는 나’가 검사 직후 열리고, 9가지 성향 풀이·핵심역량·직무 추천이 담긴 전체 결과지는 1:1 상담에서 함께 봐요.</p></div>` : '';
+      return `<div class="pv"><p class="pv-t">검사가 끝나면 이런 역량분석지를 받아요 <span>예시</span></p>${compTeaser()}<p class="pv-s">안의 내용은 가려 두었어요. 1:1 상담 때 연구원이 역량분석지를 함께 보며 직접 알려 드려요. 검사 직후에는 1장 ‘한눈에 보는 나’를 바로 볼 수 있어요.</p></div>`;
     }
 
     // ─── 컨설팅 예약 신청 (결과 화면 맨 아래) — 보기는 서버 Code.gs 의 CONSULT_OPTS 와 같아야 해요 ───
@@ -1721,7 +1784,7 @@ var LLP = (() => {
         { g: '#6C4CF1', html: L('st-k', 'INNER DRIVE', 0.1) + L('st-b', '내면 동력은 <em>9가지</em>', 0.25) + `<div class="st-grid">${grid}</div>` + L('st-s', '서연은 원칙력, 지훈은 확장력에 가까워요.', 1.4) },
         { g: '#1B97B0', hl: '#8FE3F2', html: L('st-k', 'ENERGY CENTER', 0.1) + L('st-b', '에너지가 먼저 실리는 곳은<br><em>세 갈래</em>예요', 0.25) + `<div class="st-cent">${cents}</div>` + L('st-s', '결과지에서 내 에너지가 어디에<br>얼마나 실렸는지 보여 드려요.', 1.4) },
         { g: '#2F6BFF', html: L('st-k', 'AI 시대, 기업이 찾는', 0.1) + L('st-b', '<em>4가지</em> 핵심역량', 0.25) + `<div class="st-dom">${doms}</div>` + L('st-s', '내 동력을 알면 이 중 어디가<br>강점이 되기 쉽고, 어디부터 채우면 되는지 보여요.', 1.3) + L('st-cap', `세계경제포럼(WEF) ${esc(SITE.basis.replace(/^WEF\s*/, ''))} 역량 분류`, 1.6) },
-        { g: '#6C4CF1', html: L('st-k', 'RESULT PREVIEW', 0.1) + L('st-b', '검사가 끝나면<br>이런 결과지를 <em>바로</em> 받아요', 0.25) + W(`<div class="st-pv"><div class="ap-fluid">${samplePage1()}</div></div>`, 0.6) + L('st-s', '1장 ‘한눈에 보는 나’는 바로 열리고,<br>전체 결과지는 1:1 상담에서 함께 봐요. <span class="st-pv-t">예시</span>', 1.0) },
+        { g: '#6C4CF1', html: L('st-k', 'RESULT PREVIEW', 0.1) + L('st-b', '검사가 끝나면<br>이런 <em>역량분석지</em>를 받아요', 0.25) + W(`<div class="st-pv">${compTeaser()}</div>`, 0.6) + L('st-s', '안의 내용은 가려 두었어요.<br>1:1 상담 때 연구원이 직접 알려 드려요. <span class="st-pv-t">예시</span>', 1.0) },
         { g: '#12A27E', hl: '#8EF0CF', html: L('st-k', '그래서 만들었어요', 0.1) + L('st-b', `${name} 님을 움직이는<br><em>힘</em>은 무엇일까요?`, 0.4)
           + `<ul class="st-facts">${[['검사', `${Q.TOTAL}문항 · 약 ${SITE.minutes}분`], ['분석', '9가지 성향으로 내면 동력 찾기'], ['해석', 'WEF 역량 분류로 핵심역량 풀기'], ['결과', '1장은 바로, 자세한 해석은 1:1 상담에서']].map(([k, v], i) => `<li class="st-l" style="--d:${(0.9 + i * 0.15).toFixed(2)}s"><b>${k}</b>${v}</li>`).join('')}</ul>`
           + W('<button class="btn light st-go" data-act="story-start">테스트 시작하기</button>', 1.6) + L('st-by', `${esc(SITE.org)} × ${esc(SITE.partner)} 공동 개발`, 1.7) },
