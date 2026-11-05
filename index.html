@@ -1697,10 +1697,10 @@ var LLP = (() => {
       if (!f.interests.length) E.interests = '관심 분야를 하나 이상 선택해 주세요.';
       if (!has(f.timeInvestment)) E.timeInvestment = '내용을 입력해 주세요.';
       if (!has(f.weeklyFixed)) E.weeklyFixed = '내용을 입력해 주세요.';
+      if (!f.evening) E.evening = '하나를 선택해 주세요.';
       if (!has(f.concern)) E.concern = '고민을 적어 주세요.';
       if (!f.goals.length) E.goals = '하나 이상 선택해 주세요.'; else if (f.goals.includes('기타') && !has(f.goalsOther)) E.goals = '기타 내용을 적어 주세요.';
       if (!has(f.plans)) E.plans = '내용을 입력해 주세요.';
-      if (!f.evening) E.evening = '하나를 선택해 주세요.';
       if (!f.premium) E.premium = '선택해 주세요.';
       if (!f.gender) E.gender = '선택해 주세요.';
       if (!f.times.length) E.times = '시간대를 하나 이상 선택해 주세요.';
@@ -1765,11 +1765,11 @@ var LLP = (() => {
         ${fld('interests', '현재 관심 있는 분야를 모두 선택해 주세요', multi('interests', CF.interests))}
         ${fld('timeInvestment', '평소에 시간을 투자하는 것은 어떤 것이 있나요?', inp('timeInvestment', '예) 직장, 학교, 학원, 자기계발 등'))}
         ${fld('weeklyFixed', '이 외에 일주일 스케줄 안에서 꼭 들어가는 것이 있나요?', inp('weeklyFixed', '예) 자격증 준비, 학회 참여, 동아리 참석 등'))}
+        ${fld('evening', '계획을 이루기 위해, 평일 저녁이나 야간 시간 활용에 대한 본인 상황은 어떤가요?', one('evening', CF.evening))}
         ${fld('concern', '현재 가지고 있는 고민을 적어 주세요', ta('concern'))}
         <h2 class="cf-sec">목표 및 컨설팅 기대</h2>
         ${fld('goals', '이번 컨설팅을 통해 얻고 싶은 것을 선택해 주세요', multi('goals', CF.goals, true), true, '여러 개 고를 수 있어요')}
         ${fld('plans', '지금 계획 중인 것들을 적어 주세요', ta('plans', '예) 휴학하면서 본가로 복귀, 편입 준비를 위해 독서실 다니기'))}
-        ${fld('evening', '계획을 이루기 위해, 평일 저녁이나 야간 시간 활용에 대한 본인 상황은 어떤가요?', one('evening', CF.evening))}
         ${fld('premium', '[Premium] 전문 심리 검사지 희망 여부', one('premium', CF.premium), true, '의식수준, 선호표상체계, 문장완성 검사')}
         <h2 class="cf-sec">컨설팅 요청사항</h2>
         ${fld('gender', '원하시는 컨설턴트의 성별을 알려 주세요', one('gender', CF.gender))}
