@@ -1350,9 +1350,12 @@ var LLP = (() => {
     <p class="m">${c.types.map((t, k) => `${tname(t)} ${c.sc[k]}`).join(" · ")}</p><p>${ae(c.desc)}</p><p class="rep">이 중심의 대표: <b>${tname(c.rep)}</b></p></div>`).join("")}</div>`;
   }
   function centerSummary(D) {
-    const cs = [...centersOf(D)].sort((a, b) => b.avg - a.avg), hi = cs[0], lo = cs[2];
+    const all = centersOf(D), cs = [...all].sort((a, b) => b.avg - a.avg), hi = cs[0], lo = cs[2];
     if (hi.avg - lo.avg < 1) return "세 중심이 고르게 쓰이고 있습니다. 상황에 따라 몸으로, 마음으로, 생각으로 두루 반응하는 편입니다.";
-    return `세 중심 가운데 <b>${hi.label}(${hi.sub})</b>에 힘이 가장 많이 실려 있고, <b>${lo.label}(${lo.sub})</b>은 상대적으로 덜 쓰는 영역입니다. 덜 쓰는 영역은 부족함이 아니라, 상담에서 함께 넓혀 볼 수 있는 여지입니다.`;
+    const mainC = all.find((c) => c.types.includes(D.main));
+    const rest = mainC.types.filter((t) => t !== D.main).sort((a, b) => D.s50[a - 1] - D.s50[b - 1]).map((t) => `${tname(t)}(${D.s50[t - 1]}점)`).join("·");
+    const why = mainC.avg < hi.avg ? ` 주 유형인 ${tname(D.main)}은 ${mainC.label} 중심에 속하지만, 같은 중심의 ${rest}이 평균을 낮춰 ${hi.label} 중심이 앞섰습니다.` : "";
+    return `세 중심 가운데 <b>${hi.label}(${hi.sub})</b>에 힘이 가장 많이 실려 있고, <b>${lo.label}(${lo.sub})</b>은 상대적으로 덜 쓰는 영역입니다.${why} 덜 쓰는 영역은 부족함이 아니라, 상담에서 함께 넓혀 볼 수 있는 여지입니다.`;
   }
   function clientP1(input, D, n = 1, teaser = false) {
     const ct = ctypeOf(D);
